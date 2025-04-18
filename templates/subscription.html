@@ -1,0 +1,269 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Subscription Plans</h2>
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-header text-center">
+                    <h4>1 Month</h4>
+                    <p>₹100</p>
+                </div>
+                <div class="card-body text-center">
+                    <img src="{{ url_for('static', filename='images/1_month.jpg') }}" alt="1 Month Plan"
+                        class="img-fluid mb-3" id="planImage1">
+                    <button class="btn btn-primary" onclick="selectPlan('1 Month', 100, 'planImage1')">Select
+                        Plan</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-header text-center">
+                    <h4>3 Months</h4>
+                    <p>₹250</p>
+                </div>
+                <div class="card-body text-center">
+                    <img src="{{ url_for('static', filename='images/3_months.jpg') }}" alt="3 Month Plan"
+                        class="img-fluid mb-3" id="planImage2">
+                    <button class="btn btn-primary" onclick="selectPlan('3 Months', 250, 'planImage2')">Select
+                        Plan</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-header text-center">
+                    <h4>6 Months</h4>
+                    <p>₹450</p>
+                </div>
+                <div class="card-body text-center">
+                    <img src="{{ url_for('static', filename='images/6_months.jpg') }}" alt="6 Month Plan"
+                        class="img-fluid mb-3" id="planImage3">
+                    <button class="btn btn-primary" onclick="selectPlan('6 Months', 450, 'planImage3')">Select
+                        Plan</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-header text-center">
+                    <h4>1 Year</h4>
+                    <p>₹800</p>
+                </div>
+                <div class="card-body text-center">
+                    <img src="{{ url_for('static', filename='images/1_year.jpg') }}" alt="1 Year Plan"
+                        class="img-fluid mb-3" id="planImage4">
+                    <button class="btn btn-primary" onclick="selectPlan('1 Year', 800, 'planImage4')">Select
+                        Plan</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-header text-center">
+                    <h4>Lifetime</h4>
+                    <p>₹1500</p>
+                </div>
+                <div class="card-body text-center">
+                    <img src="{{ url_for('static', filename='images/lifetime.jpg') }}" alt="Lifetime Plan"
+                        class="img-fluid mb-3" id="planImage5">
+                    <button class="btn btn-primary" onclick="selectPlan('Lifetime', 1500, 'planImage5')">Select
+                        Plan</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="paymentSection" class="mt-5" style="display: none;">
+        <div class="card">
+            <div class="card-header">
+                <h4>Payment Details</h4>
+            </div>
+            <div class="card-body">
+                <h5>You have selected <span id="selectedPlan"></span> plan.</h5>
+                <p>Amount: ₹<span id="selectedAmount"></span></p>
+
+                <form method="POST" action="{{ url_for('process_payment') }}">
+                    <input type="hidden" name="subscription_type" id="subscriptionType">
+
+                    <div class="mb-3">
+                        <label for="transactionNumber" class="form-label">Transaction Number</label>
+                        <input type="text" class="form-control" id="transactionNumber" name="transaction_number"
+                            required>
+                    </div>
+
+                    <button type="submit" class="btn btn-success">Submit Payment</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container mt-5">
+    <div class="instruction-section">
+        <div class="card shadow-sm">
+            <div class="card-header bg-info text-white">
+                <h4 class="text-center">How to Subscribe and Make a Payment</h4>
+            </div>
+            <div class="card-body">
+                <h5>Follow these easy steps to get started:</h5>
+                <ol>
+                    <li><strong>Select a Plan:</strong> Choose a subscription plan from the available options. Each plan
+                        is priced differently based on the duration.</li>
+                    <li><strong>Scan the QR Code:</strong> Once you have selected a plan, a QR code will appear. Use
+                        your phone or any QR scanner to scan the code. This will redirect you to the payment gateway.
+                    </li>
+                    <li><strong>Make Payment:</strong> After scanning the QR code, complete the payment process on the
+                        payment gateway. Ensure that the payment is successful and save the transaction number.</li>
+                    <li><strong>Enter the Transaction Number:</strong> After completing the payment, you need to enter
+                        the transaction number in the provided field. This number will be cross-verified to ensure that
+                        the payment is completed.</li>
+                    <li><strong>Submit:</strong> Once you have entered the correct transaction number, click on the
+                        'Submit Payment' button to complete your subscription process.</li>
+                </ol>
+
+                <div class="alert alert-warning mt-4">
+                    <h5>Important Notes:</h5>
+                    <ul>
+                        <li>Make sure you enter the correct transaction number to avoid any issues during verification.
+                        </li>
+                        <li>If you face any issues during the payment process, please contact our support team for
+                            assistance.</li>
+                        <li>After completing your payment, you will gain access to all the premium features as described
+                            in the subscription benefits.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .instruction-section {
+        margin-top: 50px;
+    }
+
+    .instruction-section .card {
+        background-color: #f7f8fa;
+        border: 1px solid #ddd;
+    }
+
+    .instruction-section .card-header {
+        font-size: 1.25rem;
+        font-weight: bold;
+    }
+
+    .instruction-section .card-body {
+        padding: 20px;
+    }
+
+    .instruction-section .alert-warning {
+        background-color: #fff3cd;
+        border-color: #ffeeba;
+        color: #856404;
+        border-radius: 8px;
+        padding: 15px;
+    }
+
+    ol {
+        font-size: 1.1rem;
+        line-height: 1.6;
+    }
+
+    ol li {
+        margin-bottom: 15px;
+    }
+
+    h5 {
+        font-weight: bold;
+        color: #004085;
+    }
+</style>
+
+<div class="container mt-5">
+    <div class="alert alert-info">
+        <h4 class="alert-heading text-center">Why Should You Subscribe?</h4>
+        <p>
+            With a subscription, you unlock unlimited access to all the exciting features on our platform:
+        </p>
+        <ul>
+            <li><strong>Unlimited Problem Upload</strong> – Upload as many real-world problems as you want, with no
+                restrictions.</li>
+            <li><strong>Access Unlimited Problems</strong> – View and engage with all problems shared by other users.
+                Collaborate to find effective solutions.</li>
+            <li><strong>Upload Your Story</strong> – Share your journey, success stories, or innovative solutions with
+                the community. Inspire others by showcasing how you overcame challenges.</li>
+            <li><strong>Access Community Stories</strong> – Read stories from users worldwide, gain insights, and draw
+                inspiration for your own endeavors.</li>
+            <li><strong>AI-Powered Chatbot Assistance</strong> – Enjoy access to our AI-powered chatbot, designed to
+                assist with your learning journey. It can help answer questions, guide you to the best resources, and
+                more!</li>
+            <li><strong>Connect with Others</strong> – Follow and chat with other users. Exchange ideas and resources!
+            </li>
+            <li><strong>Create and Join Unlimited Groups</strong> – Create private and public groups for better
+                collaboration. Join any group to chat and share.</li>
+            <li><strong>Real-Time Notifications</strong> – Get real-time email notifications about your profile views,
+                messages, and activity on the platform.</li>
+            <li><strong>Profile Insights</strong> – Know who is visiting your profile and interact with them easily!
+            </li>
+            <li><strong>Exclusive AI Features</strong> – Unlock exclusive AI-powered tools designed to enhance your
+                experience, from personalized learning recommendations to smart search capabilities.</li>
+        </ul>
+        <p>
+            By subscribing, you gain complete freedom to explore all these features and much more! Don’t miss out on
+            these benefits!
+        </p>
+        <h5><strong>Share Your Problem with Nurox:</strong> Upload your challenges and let the community help you
+            find innovative solutions!</h5>
+
+        <h5 class="text-center">Upgrade your experience today by choosing a subscription plan!</h5>
+    </div>
+</div>
+
+<style>
+    .alert-info {
+        background-color: #eaf7ff;
+        border-color: #cce5ff;
+        color: #31708f;
+        border-radius: 8px;
+        padding: 20px;
+    }
+
+    .alert-heading {
+        font-size: 1.5rem;
+        color: #004085;
+    }
+
+    h5 {
+        font-size: 1.2rem;
+        color: #004085;
+        margin-top: 20px;
+        font-weight: bold;
+    }
+</style>
+
+</style>
+
+<script>
+    function selectPlan(planName, amount, imageId) {
+        document.getElementById('paymentSection').style.display = 'block';
+        document.getElementById('selectedPlan').innerText = planName;
+        document.getElementById('selectedAmount').innerText = amount;
+        document.getElementById('subscriptionType').value = planName;
+        let planImages = document.querySelectorAll('.img-fluid');
+        planImages.forEach(image => {
+            image.style.display = 'none';
+        });
+        document.getElementById(imageId).style.display = 'block';
+    }
+
+</script>
+
+{% endblock %}

@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+  <div class="card shadow-lg border-0 rounded">
+    <div class="card-header text-center bg-primary text-white">
+      <h4>Create a New Group</h4>
+    </div>
+    <div class="card-body">
+      <form method="POST" action="{{ url_for('create_group') }}" id="create-group-form">
+        <div class="form-group mb-4">
+          <label for="name">Group Name</label>
+          <input type="text" class="form-control form-control-lg" id="name" name="name" required
+            placeholder="Enter group name">
+        </div>
+
+        <div class="form-group mb-4">
+          <label for="description">Description</label>
+          <textarea class="form-control form-control-lg" id="description" name="description" rows="4"
+            placeholder="Enter group description"></textarea>
+        </div>
+
+        <div class="form-group mb-4">
+          <label for="is_public">Group Type</label>
+          <select class="form-control form-control-lg" id="is_public" name="is_public">
+            <option value="public">Public</option>
+            <option value="private">Private</option>
+          </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-lg btn-block" id="submit-btn">
+          <span id="submit-btn-text">Create Group</span>
+          <div class="spinner-border spinner-border-sm text-light d-none" role="status" id="submit-spinner">
+            <span class="sr-only">Loading...</span>
+          </div>
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  const form = document.getElementById('create-group-form');
+  const submitBtn = document.getElementById('submit-btn');
+  const submitBtnText = document.getElementById('submit-btn-text');
+  const submitSpinner = document.getElementById('submit-spinner');
+
+  form.addEventListener('submit', function (event) {
+    event.preventDefault();
+
+    submitBtn.disabled = true;
+    submitBtnText.style.display = 'none';
+    submitSpinner.classList.remove('d-none');
+
+    setTimeout(function () {
+      form.submit();
+    }, 2000);
+  });
+</script>
+
+{% endblock %}
+
+<style>
+  .card {
+    border-radius: 15px;
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+  }
+
+  .card-header {
+    background-color: #007bff;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+  }
+
+  .btn {
+    padding: 12px;
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    position: relative;
+    transition: all 0.3s ease;
+  }
+
+  .btn:hover {
+    background-color: #0056b3;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  .spinner-border {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .form-control-lg {
+    font-size: 1.1rem;
+    padding: 15px;
+  }
+
+  .card-body {
+    background-color: #f9f9f9;
+  }
+
+  .form-group label {
+    font-size: 1.1rem;
+    font-weight: 600;
+  }
+
+  .form-control {
+    border-radius: 8px;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.12);
+  }
+
+  .form-control:focus {
+    box-shadow: inset 0 1px 5px rgba(0, 0, 0, 0.15);
+    border-color: #007bff;
+  }
+
+  .card-header h4 {
+    font-size: 1.8rem;
+    font-weight: 600;
+  }
+</style>

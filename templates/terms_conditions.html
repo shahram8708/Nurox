@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+
+    <div class="text-center mb-5">
+        <h1 class="display-4 font-weight-bold text-primary">Terms & Conditions</h1>
+        <p class="lead text-muted">Your use of Nurox is governed by the following terms and conditions. Please
+            read them carefully.</p>
+    </div>
+
+
+    <div class="card shadow-lg border-0 rounded-lg">
+        <div class="card-body">
+            <h5 class="font-weight-bold text-primary mb-3">1. Acceptance of Terms</h5>
+            <p>By accessing and using this platform, you agree to comply with and be bound by these terms and
+                conditions. If you do not agree to any part of these terms, please refrain from using the platform.</p>
+
+            <h5 class="font-weight-bold text-primary mt-4 mb-3">2. User Responsibilities</h5>
+            <p>As a user of Nurox, you are responsible for maintaining the confidentiality of your account
+                information. You are also responsible for all activities that occur under your account. Ensure that you
+                log out after every session to protect your account.</p>
+
+            <h5 class="font-weight-bold text-primary mt-4 mb-3">3. Uploading Eligibility</h5>
+            <p>Only registered users of Nurox are allowed to upload content. If you are not yet a registered user
+                and wish to contribute, please <a href="{{ url_for('contact') }}"
+                    class="text-decoration-none text-primary">contact us</a> for further instructions on how you may
+                contribute.</p>
+
+            <h5 class="font-weight-bold text-primary mt-4 mb-3">4. Uploading Guidelines</h5>
+            <p>Users are strictly prohibited from uploading any inappropriate content. This includes, but is not limited
+                to:</p>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">Sexually explicit or offensive content</li>
+                <li class="list-group-item">Harmful or malicious materials</li>
+                <li class="list-group-item">Illegal content or any material infringing upon intellectual property rights
+                </li>
+            </ul>
+            <p>We reserve the right to suspend or block accounts found violating these guidelines. Any inappropriate
+                content will be immediately removed, and the responsible user’s account will be suspended.</p>
+
+            <h5 class="font-weight-bold text-primary mt-4 mb-3">5. Security & Privacy</h5>
+            <p>Your privacy is a top priority. All personal information, including uploaded materials, is confidential
+                and protected. We will never share your data with third parties without your consent, except when
+                required by law.</p>
+
+            <h5 class="font-weight-bold text-primary mt-4 mb-3">6. Intellectual Property</h5>
+            <p>All resources uploaded to Nurox remain the property of their respective owners. Users must respect
+                intellectual property laws and refrain from sharing copyrighted content without the necessary
+                permissions.</p>
+
+            <h5 class="font-weight-bold text-primary mt-4 mb-3">7. Limitation of Liability</h5>
+            <p>Nurox is provided "as is," without any warranties, express or implied. We are not responsible for
+                any errors, omissions, or damages that arise from your use of the platform or any content within it.</p>
+
+            <h5 class="font-weight-bold text-primary mt-4 mb-3">8. Changes to Terms</h5>
+            <p>We reserve the right to update these Terms & Conditions at any time. All significant changes will be
+                communicated to users via email or notification on the platform. Your continued use of the platform
+                signifies your acceptance of the revised terms.</p>
+
+            <p>If you have any questions regarding these Terms & Conditions or need assistance with accessing or
+                uploading content, please don't hesitate to <a href="{{ url_for('contact') }}"
+                    class="text-decoration-none text-primary">contact us</a>. We are here to help!</p>
+        </div>
+    </div>
+</div>
+
+
+<style>
+    .card {
+        background-color: #f8f9fa;
+    }
+
+    .list-group-item {
+        border: none;
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
+    .list-group-item:first-child {
+        padding-top: 10px;
+    }
+
+    .list-group-item:last-child {
+        padding-bottom: 10px;
+    }
+
+    .text-primary {
+        color: #007bff;
+    }
+
+    h5 {
+        font-size: 1.25rem;
+    }
+
+    .display-4 {
+        font-size: 2.8rem;
+        font-weight: 600;
+    }
+
+    .lead {
+        font-size: 1.1rem;
+        color: #6c757d;
+    }
+
+    .font-weight-bold {
+        font-weight: 700;
+    }
+
+    .text-center {
+        text-align: center;
+    }
+
+    .card-body {
+        padding: 30px;
+    }
+</style>
+{% endblock %}

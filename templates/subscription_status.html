@@ -1,0 +1,170 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4 text-primary font-weight-bold">Your Subscription Status</h2>
+
+    <div class="card shadow-lg border-light rounded">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">Subscription Details</h4>
+        </div>
+        <div class="card-body">
+            <p><strong>Subscription Status:</strong> <span class="text-capitalize">{{ user.subscription_status }}</span>
+            </p>
+            <p><strong>Subscription Type:</strong> {{ user.subscription_type }}</p>
+
+            {% if user.subscription_type == 'Lifetime' %}
+            <p><strong>Expiry Date:</strong> Lifetime</p>
+            {% elif user.subscription_expiry %}
+            <p><strong>Expiry Date:</strong> {{ user.subscription_expiry.strftime('%Y-%m-%d') }}</p>
+            {% else %}
+            <p><strong>Expiry Date:</strong> Not available</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="card mt-4 shadow-lg border-light rounded">
+        <div class="card-header bg-info text-white">
+            <h4 class="mb-0">Your Subscription Benefits</h4>
+        </div>
+        <div class="card-body">
+            <p><strong>Congratulations!</strong> You’ve unlocked exclusive benefits with your premium subscription!
+                Enjoy unlimited access to the following features:</p>
+            <h5><strong>Welcome to Nurox:</strong> Post your real-world challenges and collaborate with a dynamic
+                community to find creative solutions!</h5>
+            <ul class="list-unstyled">
+                <li><i class="fas fa-check-circle text-success"></i> <strong>Unlimited Problem Upload</strong> – Share
+                    your challenges or real-world problems with the community. Collaborate with others to brainstorm and
+                    find innovative solutions.</li>
+                <li><i class="fas fa-check-circle text-success"></i> <strong>Access Unlimited Problems</strong> – Browse
+                    a diverse set of challenges submitted by users. Participate in solving them and contribute your
+                    unique insights.</li>
+                <li><i class="fas fa-check-circle text-success"></i> <strong>Nurox Integration</strong> – Easily
+                    post your problems to our Nurox and receive community-driven support for quick and effective
+                    resolutions.</li>
+                <li><i class="fas fa-check-circle text-success"></i> <strong>AI-Powered Chatbot Assistance</strong> –
+                    Enjoy access to our AI-powered chatbot, designed to make your learning journey smoother and faster.
+                    It can assist with answering questions, explaining concepts, and guiding you to the best!</li>
+                <li><i class="fas fa-check-circle text-success"></i> <strong>Connect with Others</strong> – Follow and
+                    chat with other users freely, expanding your network of like-minded learners.</li>
+                <li><i class="fas fa-check-circle text-success"></i> <strong>Create and Join Unlimited Groups</strong> –
+                    Whether public or private, you can create and join an unlimited number of groups to collaborate,
+                    share resources, and engage in meaningful discussions with peers.</li>
+                <li><i class="fas fa-check-circle text-success"></i> <strong>Share Your Story</strong> – Upload your
+                    journey, success stories, or innovative ideas. Inspire others with your personal experiences and
+                    breakthroughs.</li>
+                <li><i class="fas fa-check-circle text-success"></i> <strong>Read Community Stories</strong> – Explore
+                    and learn from the experiences of others in the community. Gain inspiration, strategies, and
+                    solutions for your own endeavors.</li>
+                <li><i class="fas fa-check-circle text-success"></i> <strong>Real-Time Notifications</strong> – Receive
+                    instant notifications about profile visits, messages, and activities, ensuring you stay updated on
+                    everything happening around you.</li>
+                <li><i class="fas fa-check-circle text-success"></i> <strong>Profile Insights</strong> – See who’s
+                    visiting your profile, giving you the chance to connect directly with people interested in your work
+                    and products.</li>
+                <li><i class="fas fa-check-circle text-success"></i> <strong>Exclusive AI Features</strong> – As part of
+                    your subscription, unlock exclusive AI-powered tools designed to enhance your experience. From
+                    personalized learning recommendations to smart search capabilities, the AI integration will elevate
+                    your overall journey.</li>
+            </ul>
+
+            <p><strong>But that's not all! By subscribing, you’re not just gaining access to these amazing features,
+                    you’re unlocking a world of opportunities for growth, collaboration, and success. Whether you're
+                    looking to share your knowledge, expand your network, this platform is designed to support your
+                    goals.</strong></p>
+
+            <p><strong>Imagine being able to:</strong></p>
+            <ul class="list-unstyled">
+                <li><i class="fas fa-check-circle text-success"></i> Use AI technology to make your learning journey
+                    more efficient and personalized.</li>
+                <li><i class="fas fa-check-circle text-success"></i> Never miss an update or important connection thanks
+                    to real-time notifications.</li>
+            </ul>
+
+            <p><strong>Take the leap today and unlock all these benefits! Don’t miss out on the ultimate educational
+                    experience. Subscribe now and take control of your learning journey like never before!</strong></p>
+            <p>If you have any questions or need further assistance, feel free to reach out. We’re here to help you
+                succeed!</p>
+        </div>
+    </div>
+
+    <div class="alert alert-success mt-4 custom-subscription-alert">
+        <h2 class="alert-heading text-center font-weight-bold">You Are Already Subscribed!</h2>
+        <p class="lead text-center">
+            Thank you for subscribing! You now have access to all the premium features. Enjoy your unlimited Plan.
+        </p>
+    </div>
+</div>
+
+<script>
+    function showSpinner(button) {
+        button.disabled = true;
+        button.innerHTML = `
+            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            Processing...
+        `;
+    }
+</script>
+
+<style>
+    .card-header {
+        background-color: #007bff;
+        color: white;
+        font-size: 1.2rem;
+    }
+
+    .card-body {
+        font-size: 1rem;
+        line-height: 1.6;
+    }
+
+    .card-body p,
+    .card-body ul {
+        font-size: 1.1rem;
+    }
+
+    .card {
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+    .custom-subscription-alert {
+        background-color: #28a745;
+        color: white;
+        font-size: 1.2rem;
+        border-radius: 10px;
+        padding: 30px;
+    }
+
+    .custom-subscription-alert .alert-heading {
+        font-size: 1.5rem;
+        font-weight: bold;
+    }
+
+    .list-unstyled li {
+        margin-bottom: 10px;
+    }
+
+    .list-unstyled i {
+        margin-right: 10px;
+    }
+
+    .btn-spinner {
+        position: relative;
+    }
+
+    .btn-spinner .spinner-border {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    @media (max-width: 768px) {
+        .card-body {
+            font-size: 1rem;
+        }
+    }
+</style>
+
+{% endblock %}

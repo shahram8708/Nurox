@@ -1,0 +1,165 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Edit Profile</h2>
+
+    <form method="POST" onsubmit="submitForm()">
+        <div class="mb-3">
+            <label for="username" class="form-label">Username</label>
+            <input type="text" class="form-control" id="username" name="username" value="{{ user.username }}"
+                placeholder="Enter your username" required>
+            <small class="form-text text-muted">Your unique username to identify you on the platform.</small>
+        </div>
+        <!-- <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" class="form-control" id="email" name="email" value="{{ user.email }}"
+                placeholder="Enter your email" required>
+            <small class="form-text text-muted">This will be your contact email.</small>
+        </div> -->
+        <div class="mb-3">
+            <label for="college" class="form-label">Organization Name</label>
+            <input type="text" class="form-control" id="college" name="college"
+                value="{{ user.college if user.college else '' }}" placeholder="Enter your Organization name" required>
+            <small class="form-text text-muted">Please enter the full name of your Organization.</small>
+        </div>
+        <div class="mb-3">
+            <label for="branch" class="form-label">Your Profession</label>
+            <input type="text" class="form-control" id="branch" name="branch"
+                value="{{ user.branch if user.branch else '' }}" placeholder="Enter your Profession name" required>
+            <small class="form-text text-muted">Specify your Profession Example: "Software Developer", "Doctor",
+                "Marketing Manager", or "Other".</small>
+        </div>
+        <div class="mb-3">
+            <label for="bio" class="form-label">Bio</label>
+            <textarea class="form-control" id="bio" name="bio" rows="3" placeholder="Write a brief bio about yourself"
+                required>{{ user.bio if user.bio else '' }}</textarea>
+            <small class="form-text text-muted">Share a few sentences about yourself.</small>
+        </div>
+        <!-- <div class="mb-3">
+            <label class="form-label">Are you an Admin?</label>
+            <div>
+                <input type="radio" id="admin_yes" name="is_admin" value="yes" {% if user.is_admin %}checked{% endif %}>
+                <label for="admin_yes">Yes</label>
+
+                <input type="radio" id="admin_no" name="is_admin" value="no" {% if not user.is_admin %}checked{% endif
+                    %}>
+                <label for="admin_no">No</label>
+            </div>
+            <small class="form-text text-muted">Select "Yes" if you have admin privileges.</small>
+        </div> -->
+
+        {% if user.user_type in ['entrepreneur_innovator', 'both'] %}
+        <div class="mb-3">
+            <label for="sectors" class="form-label">Select Your Sectors of Interest (Select all that apply)</label>
+            <select class="form-control" id="sectors" name="sectors" multiple required>
+                <option value="Agriculture, Forestry & Fishing">Agriculture, Forestry & Fishing</option>
+                <option value="Mining & Quarrying">Mining & Quarrying</option>
+                <option value="Oil & Gas Exploration">Oil & Gas Exploration</option>
+                <option value="Renewable Energy">Renewable Energy (Solar, Wind, Hydropower, etc.)
+                </option>
+                <option value="Water Resource Management">Water Resource Management</option>
+                <option value="Food & Beverage Processing">Food & Beverage Processing</option>
+                <option value="Textile & Apparel Manufacturing">Textile & Apparel Manufacturing</option>
+                <option value="Automotive & Transportation Equipment">Automotive & Transportation
+                    Equipment</option>
+                <option value="Electronics & Semiconductors">Electronics & Semiconductors</option>
+                <option value="Chemical Manufacturing">Chemical Manufacturing</option>
+                <option value="Pharmaceutical Manufacturing">Pharmaceutical Manufacturing</option>
+                <option value="Construction & Building Materials">Construction & Building Materials
+                </option>
+                <option value="Metalworking & Fabrication">Metalworking & Fabrication</option>
+                <option value="Plastics & Rubber Products">Plastics & Rubber Products</option>
+                <option value="Aerospace & Defense Manufacturing">Aerospace & Defense Manufacturing
+                </option>
+                <option value="Healthcare & Medical Services">Healthcare & Medical Services</option>
+                <option value="Education & E-learning">Education & E-learning</option>
+                <option value="Tourism, Hospitality & Leisure">Tourism, Hospitality & Leisure</option>
+                <option value="Retail & Consumer Goods">Retail & Consumer Goods</option>
+                <option value="Financial Services">Financial Services (Banking, Insurance, Investment)
+                </option>
+                <option value="Logistics & Supply Chain Management">Logistics & Supply Chain Management
+                </option>
+                <option value="Real Estate & Property Management">Real Estate & Property Management
+                </option>
+                <option value="Telecommunications & Networking">Telecommunications & Networking</option>
+                <option value="Media & Entertainment">Media & Entertainment</option>
+                <option value="Sports & Recreation">Sports & Recreation</option>
+                <option value="Information Technology & Software Development">Information Technology
+                    (IT) & Software Development</option>
+                <option value="Artificial Intelligence & Machine Learning">Artificial Intelligence &
+                    Machine Learning</option>
+                <option value="Biotechnology & Life Sciences">Biotechnology & Life Sciences</option>
+                <option value="Research & Development">Research & Development (R&D)</option>
+                <option value="Data Science & Big Data Analytics">Data Science & Big Data Analytics
+                </option>
+                <option value="Cybersecurity & Data Protection">Cybersecurity & Data Protection</option>
+                <option value="Cloud Computing & Infrastructure">Cloud Computing & Infrastructure
+                </option>
+                <option value="Government & Public Administration">Government & Public Administration
+                </option>
+                <option value="Nonprofit & Charity Organizations">Nonprofit & Charity Organizations
+                </option>
+                <option value="Policy Research & Think Tanks">Policy Research & Think Tanks</option>
+                <option value="International Relations & Diplomacy">International Relations & Diplomacy
+                </option>
+                <option value="Space Exploration & Aerospace Engineering">Space Exploration & Aerospace
+                    Engineering</option>
+                <option value="Blockchain & Cryptocurrency">Blockchain & Cryptocurrency</option>
+                <option value="E-commerce & Digital Marketplaces">E-commerce & Digital Marketplaces
+                </option>
+                <option value="Virtual Reality & Augmented Reality">Virtual Reality (VR) & Augmented
+                    Reality (AR)</option>
+                <option value="Robotics & Automation">Robotics & Automation</option>
+                <option value="Electric Vehicles & Sustainable Transportation">Electric Vehicles (EVs) &
+                    Sustainable Transportation</option>
+                <option value="Circular Economy & Recycling">Circular Economy & Recycling</option>
+                <option value="Climate Change Mitigation & Adaptation">Climate Change Mitigation &
+                    Adaptation</option>
+                <option value="Smart Cities & Internet of Things">Smart Cities & Internet of Things
+                    (IoT)</option>
+                <option value="Social Media & Influencer Marketing">Social Media & Influencer Marketing
+                </option>
+                <option value="Ethical Fashion & Sustainable Textiles">Ethical Fashion & Sustainable
+                    Textiles</option>
+                <option value="Organic & Natural Products">Organic & Natural Products</option>
+                <option value="Arts, Crafts & Design">Arts, Crafts & Design</option>
+                <option value="Film, Television & Animation">Film, Television & Animation</option>
+                <option value="Music Production & Distribution">Music Production & Distribution</option>
+                <option value="Writing, Publishing & Journalism">Writing, Publishing & Journalism
+                </option>
+                <option value="Gaming & Esports">Gaming & Esports</option>
+                <option value="Legal Services & Advocacy">Legal Services & Advocacy</option>
+                <option value="Human Resources & Talent Management">Human Resources & Talent Management
+                </option>
+                <option value="Event Planning & Management">Event Planning & Management</option>
+                <option value="Safety & Security Services">Safety & Security Services</option>
+                <option value="Environmental Consulting & Conservation">Environmental Consulting &
+                    Conservation</option>
+                <option value="Disaster Management & Emergency Services">Disaster Management & Emergency
+                    Services</option>
+                <option value="Agritech & Precision Farming">Agritech & Precision Farming</option>
+            </select>
+            <small class="form-text text-muted">Hold down the Ctrl (Windows) or Command (Mac) button to select multiple
+                options.</small>
+        </div>
+        {% endif %}
+
+        <button id="submitBtn" type="submit" class="btn btn-success">
+            Update Profile
+            <span id="spinner" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"
+                style="display:none;"></span>
+        </button>
+        <a href="{{ url_for('profile', user_id=user.id) }}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+
+<script>
+    function submitForm() {
+        const submitBtn = document.getElementById('submitBtn');
+        const spinner = document.getElementById('spinner');
+        submitBtn.disabled = true;
+        spinner.style.display = 'inline-block';
+    }
+</script>
+{% endblock %}

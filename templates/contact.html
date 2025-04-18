@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8">
+            <div class="card shadow-lg border-0 rounded-lg">
+                <div class="card-header text-center bg-gradient text-white rounded-top">
+                    <h4 class="mb-0">Get In Touch</h4>
+                </div>
+                <div class="card-body">
+                    <form id="contactForm" method="POST" action="{{ url_for('send_message') }}">
+
+                        <div class="mb-4">
+                            <label for="name" class="form-label text-muted">Your Full Name</label>
+                            <input type="text" class="form-control shadow-sm rounded-pill" id="name" name="name"
+                                required>
+                        </div>
+
+
+                        <div class="mb-4">
+                            <label for="email" class="form-label text-muted">Email Address</label>
+                            <input type="email" class="form-control shadow-sm rounded-pill" id="email" name="email"
+                                required>
+                        </div>
+
+
+                        <div class="mb-4">
+                            <label for="phone" class="form-label text-muted">Phone Number</label>
+                            <input type="tel" class="form-control shadow-sm rounded-pill" id="phone" name="phone"
+                                required>
+                        </div>
+
+
+                        <div class="mb-4">
+                            <label for="message" class="form-label text-muted">Your Message</label>
+                            <textarea class="form-control shadow-sm rounded-3" id="message" name="message" rows="5"
+                                required></textarea>
+                        </div>
+
+
+                        <div class="d-flex justify-content-between align-items-center">
+                            <button type="submit" class="btn btn-primary px-4 py-2 rounded-pill" id="submitButton">
+                                Send Message
+                            </button>
+                            <div id="loadingIndicator" class="spinner-border text-primary" role="status"
+                                style="display: none;">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="position-fixed bottom-0 end-0 mb-4 me-4">
+    <button class="btn btn-success btn-lg rounded-circle" id="contactHelpButton" data-bs-toggle="tooltip"
+        data-bs-placement="left" title="Need Help?">
+        <i class="bi bi-question-circle-fill"></i>
+    </button>
+</div>
+
+<script>
+
+    document.getElementById("contactForm").onsubmit = function () {
+        var submitButton = document.getElementById("submitButton");
+        var loadingIndicator = document.getElementById("loadingIndicator");
+
+        submitButton.disabled = true;
+        loadingIndicator.style.display = "inline-block";
+    };
+
+
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+</script>
+
+{% endblock %}

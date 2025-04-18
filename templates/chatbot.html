@@ -1,0 +1,137 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg">
+                <div class="card-header text-center bg-primary text-white">
+                    <h4 class="mb-0">ChatBot</h4>
+                </div>
+                <div class="card-body">
+                    <div id="chatContainer" class="mb-3"
+                        style="height: 400px; overflow-y: auto; border: 1px solid #ccc; border-radius: 0.25rem; padding: 10px; background-color: #f9f9f9;">
+                    </div>
+                    <form method="POST" action="#" id="chatForm">
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" id="userMessage" name="message"
+                                placeholder="Type your message..." required>
+                            <button type="submit" class="btn btn-primary" id="sendButton">Send</button>
+                        </div>
+                    </form>
+                    <div id="loadingIndicator" class="spinner-border text-primary" role="status"
+                        style="display: none; margin-top: 10px;">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const qaPairs = {
+        "hello": "Hi there! How can I help you?",
+        "hi": "Hello! How can I assist you today?",
+        "hey": "Hey there! What do you need help with?",
+        "how are you?": "I'm just a bot, but thanks for asking!",
+        "how's it going?": "Everything's good on my end! How can I assist you?",
+        "what is your name?": "I am Nurox, a platform to help you find solutions to everyday challenges.",
+        "bye": "Goodbye! Have a great day!",
+        "see you later": "See you later! Don't hesitate to reach out again.",
+        "help": "Sure! What do you need help with?",
+
+        "good morning": "Good morning! How can I help you today?",
+        "good afternoon": "Good afternoon! What can I assist you with?",
+        "good evening": "Good evening! How can I be of service?",
+
+        "how to submit a problem?": "To submit a problem, go to the problem submission page, fill in the details, and add an optional image or video.",
+        "can I submit multiple problems at once?": "Yes, you can submit multiple problems, but each submission should be unique.",
+        "what types of problems can I submit?": "You can submit problems in categories like Health, Education, Urban Development, and more.",
+        "how to delete a problem submission?": "To delete a problem submission, go to your profile and find the problem you want to remove, then click the delete option.",
+        "how to edit a problem submission?": "To edit your problem, go to your profile, select the problem, and click on the edit button.",
+        "how to share a problem?": "You can share a problem by clicking the share button on the problem's page and choosing your preferred sharing method.",
+        "can I make my problem private?": "Yes, you can set your problem submission to private in the privacy settings.",
+        "how to check the status of my problem submission?": "You can check the status of your submitted problem in the 'My Problems' section of your profile.",
+        "what happens after I submit a problem?": "Once you submit a problem, it will be available for community discussion and possible solutions from entrepreneurs.",
+
+        "how to register on Nurox?": "To register, go to the registration page, fill in your details, and submit the form. Be sure to use your enrollment number as the email.",
+        "how to update my profile?": "To update your profile, go to the profile settings and edit your personal information.",
+        "what is my profile?": "Your profile contains all your submitted problems, solutions, and personal details.",
+        "how to change my password?": "To change your password, go to your profile settings and select 'Change Password'.",
+        "how to change my email address?": "To change your email address, go to your profile settings and update your email information.",
+        "how to view my activity log?": "You can view your activity log in the account settings under 'Activity'.",
+        "how to delete my account?": "To delete your account, please contact Nurox support for assistance.",
+
+        "what are favorites?": "Favorites are problems or solutions that you have marked to revisit later.",
+        "how to view favorites?": "You can view your favorites in the favorites section of your profile.",
+        "how to add a problem to favorites?": "To add a problem to favorites, click on the star icon next to the problem.",
+        "how to remove a problem from favorites?": "To remove a problem from favorites, click on the star icon again.",
+        "how to view recommendations?": "Recommendations are shown based on your activity and preferences in the recommendations section.",
+        "how are recommendations generated?": "Recommendations are generated using AI based on your activity and community preferences.",
+
+        "how to contact support?": "You can contact support by filling out the contact form on the support page.",
+        "how to report an issue?": "To report an issue, please fill out the issue report form in the help section.",
+        "what are the community guidelines?": "Community guidelines define the expected behavior for using Nurox. You can view them on the community guidelines page.",
+        "how to give feedback?": "We value your feedback! Please provide it through the feedback form available in the help section.",
+        "how to request a feature?": "To request a feature, please fill out the feature request form in the help section.",
+        "how to check my support ticket status?": "You can check your support ticket status in the support section of your profile.",
+        "how to unsubscribe from newsletters?": "To unsubscribe from newsletters, click the unsubscribe link in the email or update your preferences in your account settings.",
+
+        "what are notifications?": "Notifications inform you about updates related to your problems, solutions, and account.",
+        "what is the dashboard?": "The dashboard provides an overview of your problems, solutions, favorites, and notifications.",
+        "how to manage subscriptions?": "To manage your subscriptions, go to the subscriptions page in your profile settings.",
+        "how to log out?": "You can log out by clicking the 'Log Out' button in your profile menu.",
+        "how to find a specific problem?": "You can find a specific problem using the search bar at the top of the page.",
+        "what happens if I violate terms?": "If you violate the terms, your account may be suspended or terminated based on the severity of the violation.",
+        "how to reset my password?": "To reset your password, click on 'Forgot Password?' on the login page and follow the instructions sent to your email.",
+        "can I recover deleted problems?": "Unfortunately, once a problem is deleted, it cannot be recovered. Please be careful when deleting.",
+        "how to check my submission history?": "You can check your submission history in the 'My Submissions' section of your profile.",
+        "is there a size limit for submissions?": "Yes, there is a size limit for submissions. Please refer to the guidelines for more details.",
+        "how to change my profile picture?": "To change your profile picture, go to your profile settings and upload a new image.",
+        "how to download a solution?": "To download a solution, click on the download button next to the solution.",
+        "can I print my submissions?": "Yes, you can print submissions directly from their respective pages.",
+        "how to change language settings?": "You can change your language settings in the account preferences section.",
+        "what should I do if I forget my password?": "If you forget your password, click on 'Forgot Password?' on the login page to reset it.",
+        "what is the privacy policy?": "You can view our privacy policy on the privacy policy page.",
+        "what are the terms and conditions?": "You can view the terms and conditions on the terms and conditions page.",
+        "how to customize notification settings?": "You can customize your notification settings in your account settings under 'Notifications'.",
+        "how to link my social media accounts?": "To link your social media accounts, go to your profile settings and choose 'Social Accounts'.",
+        "how to submit a bug report?": "To submit a bug report, fill out the bug report form in the help section.",
+        "what to do if I encounter a technical issue?": "If you encounter a technical issue, contact support for immediate assistance.",
+        "how to log in with social media?": "You can log in with social media by clicking the respective button on the login page.",
+        "can I delete my favorites?": "Yes, you can delete resources from your favorites by going to the favorites section and removing them.",
+        "how to enable two-factor authentication?": "To enable two-factor authentication, go to your security settings and follow the instructions.",
+        "what is an API key?": "An API key is a unique identifier used to authenticate requests to our services. You can generate one in your account settings.",
+        "how to integrate with third-party apps?": "To integrate with third-party apps, refer to the API documentation available in the help section.",
+        "how to manage permissions for shared resources?": "You can manage permissions for shared resources in the resource settings.",
+        "can I schedule submissions?": "Currently, scheduling submissions is not supported, but you can submit resources anytime.",
+        "how to check if my submission is public?": "You can check the visibility status of your submission in the resource settings.",
+        "how to delete my search history?": "To delete your search history, go to your account settings and look for the 'Privacy' section.",
+        "how to report inappropriate content?": "To report inappropriate content, click the report button next to the resource in question.",
+        "how to clear my cache?": "To clear your cache, follow the instructions for your specific browser or device.",
+        "how to refresh the page?": "You can refresh the page by clicking the refresh button in your browser or pressing F5 on your keyboard."
+    };
+
+    document.getElementById('chatForm').addEventListener('submit', function (event) {
+        event.preventDefault();
+        let userMessage = document.getElementById('userMessage').value.trim().toLowerCase();
+
+        const chatContainer = document.getElementById('chatContainer');
+        chatContainer.innerHTML += '<div class="text-end mb-2"><strong>You:</strong> <span>' + userMessage + '</span></div>';
+
+        document.getElementById('userMessage').value = '';
+
+        document.getElementById('loadingIndicator').style.display = 'inline-block';
+        document.getElementById('sendButton').disabled = true;
+
+        setTimeout(function () {
+            const botResponse = qaPairs[userMessage] || "I'm sorry, I don't understand that.";
+            chatContainer.innerHTML += '<div class="text-start mb-2"><strong>Chatbot:</strong> <span>' + botResponse + '</span></div>';
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+            document.getElementById('loadingIndicator').style.display = 'none';
+            document.getElementById('sendButton').disabled = false;
+        }, 1000);
+    });
+</script>
+{% endblock %}

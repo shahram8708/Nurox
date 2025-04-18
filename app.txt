@@ -1,0 +1,3 @@
+postgresql://soch_factory_user:GghilLXfgIbI65767J3qbJSeVp8hLKcn@dpg-cu2hph3v2p9s738u4hqg-a.singapore-postgres.render.com/soch_factory
+
+sqlite:///db.sqlite3

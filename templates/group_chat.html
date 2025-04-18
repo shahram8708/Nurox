@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='logo2.png') }}" type="image/x-icon">
+    <meta name="description"
+        content="Nurox is a platform that bridges the gap between real-world problems and actionable solutions, empowering users and entrepreneurs to collaborate on innovative solutions to everyday challenges.">
+    <meta name="keywords"
+        content="Nurox, real-world problems, actionable solutions, innovation, community-driven platform, entrepreneurs, challenges, solutions, social impact, sustainable innovation">
+
+    <meta property="og:title" content="Nurox - Empowering Communities, Inspiring Innovations">
+    <meta property="og:description"
+        content="Nurox is the ultimate platform for addressing real-life challenges by empowering individuals and entrepreneurs to collaborate and find impactful solutions.">
+    <meta property="og:image" content="{{ url_for('static', filename='logo2.png') }}">
+    <meta property="og:url" content="https://nurox.onrender.com/">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Nurox">
+    <meta property="og:locale" content="en_US">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Nurox - Unlock a World of Innovation">
+    <meta name="twitter:description"
+        content="Nurox connects communities to innovate and solve real-world problems. Collaborate with like-minded individuals and entrepreneurs to create solutions that make a difference.">
+    <meta name="twitter:image" content="{{ url_for('static', filename='logo2.png') }}">
+
+    <script type="application/ld+json">
+        {
+            "@context": "http://schema.org",
+            "@type": "Organization",
+            "name": "Nurox",
+            "url": "https://nurox.onrender.com/",
+            "logo": "{{ url_for('static', filename='logo2.png') }}",
+            "description": "Nurox empowers communities to solve real-world problems through collaboration and innovation.",
+            "address": {
+                "@type": "PostalAddress",
+                "addressLocality": "Gujarat",
+                "addressCountry": "IN"
+            },
+            "sameAs": [
+                "https://x.com/multi_mosaic",
+                "https://www.facebook.com/profile.php?id=61574916413888"
+            ]
+        }
+    </script>
+
+    <link rel="canonical" href="https://nurox.onrender.com/">
+    <meta name="robots" content="index, follow">
+    <meta name="revisit-after" content="7 days">
+    <meta name="rating" content="General">
+    <meta name="theme-color" content="#ffffff">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <title>Group Chat with {{ group.name }} - VGEC E-Library</title>
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .chat-box {
+            background-color: #ffffff;
+            border: 1px solid #dee2e6;
+            border-radius: 0.5rem;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            height: 70vh;
+            overflow-y: auto;
+            padding: 15px;
+        }
+
+        .message {
+            margin-bottom: 15px;
+            padding: 10px;
+            border-radius: 0.5rem;
+        }
+
+        .message strong {
+            display: block;
+        }
+
+        .text-end {
+            background-color: #e9f7ff;
+        }
+
+        .text-start {
+            background-color: #f1f1f1;
+        }
+
+        .input-group input {
+            border-radius: 0.5rem 0 0 0.5rem;
+        }
+
+        .input-group button {
+            border-radius: 0 0.5rem 0.5rem 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container mt-5">
+        <h2 class="text-center mb-4">{{ group.name }} Group Chat</h2>
+
+        <div class="chat-box mb-4" id="chat-box">
+            {% for message in group_messages %}
+            <div class="message {{ 'text-end' if message.user.id == current_user.id else 'text-start' }}">
+                <strong>{{ message.user.username }}</strong>
+                <span>{{ message.content }}</span>
+                <small class="text-muted d-block">{{ message.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</small>
+            </div>
+            {% endfor %}
+        </div>
+
+        <form method="POST" action="{{ url_for('send', group_id=group.id) }}" id="chat-form">
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" name="content" placeholder="Type your message here..." required>
+                <div class="input-group-append">
+                    <button class="btn btn-primary" type="submit">Send</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <audio id="message-sound" src="{{ url_for('static', filename='notification_sound.mp3') }}" preload="auto"></audio>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script>
+
+        function scrollToBottom() {
+            const chatBox = document.getElementById('chat-box');
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        let lastMessageId = {{ group_messages|length > 0 and group_messages[-1].id or 0 }};
+
+        document.getElementById('chat-form').addEventListener('submit', function (event) {
+    event.preventDefault();
+
+    const messageInput = this.querySelector('input[name="content"]');
+    const sendButton = this.querySelector('button[type="submit"]');
+
+    sendButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Sending...';
+    sendButton.disabled = true;
+
+    $.ajax({
+        url: "{{ url_for('send', group_id=group.id) }}",
+        method: 'POST',
+        data: { content: messageInput.value },
+        success: function () {
+            messageInput.value = '';
+            scrollToBottom();
+        },
+        error: function (error) {
+            alert("Failed to send the message. Please try again.");
+            console.error("Message sending error: ", error);
+        },
+        complete: function () {
+            sendButton.innerHTML = 'Send';
+            sendButton.disabled = false;
+        }
+    });
+
+    setTimeout(scrollToBottom, 100);
+});
+
+        function fetchNewMessages() {
+    $.ajax({
+        url: "{{ url_for('group_chat_updates', group_id=group.id) }}",
+        method: 'GET',
+        data: { last_message_id: lastMessageId },
+        success: function (newMessages) {
+            if (newMessages.length > 0) {
+                newMessages.forEach(function (message) {
+                    const messageHtml = `
+                        <div class="message ${message.user_id == {{ current_user.id | tojson }} ? 'text-end' : 'text-start'}">
+                            <strong>${message.username}</strong>
+                            <span>${message.content}</span>
+                            <small class="text-muted d-block">${message.timestamp}</small>
+                        </div>
+                    `;
+                    $('#chat-box').append(messageHtml);
+                    lastMessageId = Math.max(lastMessageId, message.id);
+                });
+
+
+                const lastMessage = newMessages[newMessages.length - 1];
+                if (lastMessage.user_id !== {{ current_user.id | tojson }}) {
+                    const messageSound = document.getElementById('message-sound');
+                    messageSound.play().catch(err => console.warn("Audio play failed: ", err));
+                }
+
+                scrollToBottom();
+            }
+        },
+        error: function (error) {
+            console.error("Error fetching new messages: ", error);
+        }
+    });
+}
+
+        setInterval(fetchNewMessages, 1000);
+
+        window.onload = function () {
+            scrollToBottom();
+        };
+    </script>
+</body>
+
+</html>

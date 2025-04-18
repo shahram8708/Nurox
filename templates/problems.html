@@ -1,0 +1,514 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4 text-primary font-weight-bold">Problems by Sector</h2>
+    <input type="text" id="generalSearchInput" class="form-control mb-4 shadow-sm"
+        placeholder="Search Problems by Sector">
+    <select id="sectorSelects" class="form-control mb-4 shadow-sm">
+        <option value="">-- Select Sector --</option>
+        <option value="Agriculture, Forestry & Fishing">Agriculture, Forestry & Fishing</option>
+        <option value="Mining & Quarrying">Mining & Quarrying</option>
+        <option value="Oil & Gas Exploration">Oil & Gas Exploration</option>
+        <option value="Renewable Energy">Renewable Energy (Solar, Wind, Hydropower, etc.)</option>
+        <option value="Water Resource Management">Water Resource Management</option>
+        <option value="Food & Beverage Processing">Food & Beverage Processing</option>
+        <option value="Textile & Apparel Manufacturing">Textile & Apparel Manufacturing</option>
+        <option value="Automotive & Transportation Equipment">Automotive & Transportation Equipment</option>
+        <option value="Electronics & Semiconductors">Electronics & Semiconductors</option>
+        <option value="Chemical Manufacturing">Chemical Manufacturing</option>
+        <option value="Pharmaceutical Manufacturing">Pharmaceutical Manufacturing</option>
+        <option value="Construction & Building Materials">Construction & Building Materials</option>
+        <option value="Metalworking & Fabrication">Metalworking & Fabrication</option>
+        <option value="Plastics & Rubber Products">Plastics & Rubber Products</option>
+        <option value="Aerospace & Defense Manufacturing">Aerospace & Defense Manufacturing</option>
+        <option value="Healthcare & Medical Services">Healthcare & Medical Services</option>
+        <option value="Education & E-learning">Education & E-learning</option>
+        <option value="Tourism, Hospitality & Leisure">Tourism, Hospitality & Leisure</option>
+        <option value="Retail & Consumer Goods">Retail & Consumer Goods</option>
+        <option value="Financial Services">Financial Services (Banking, Insurance, Investment)</option>
+        <option value="Logistics & Supply Chain Management">Logistics & Supply Chain Management</option>
+        <option value="Real Estate & Property Management">Real Estate & Property Management</option>
+        <option value="Telecommunications & Networking">Telecommunications & Networking</option>
+        <option value="Media & Entertainment">Media & Entertainment</option>
+        <option value="Sports & Recreation">Sports & Recreation</option>
+        <option value="Information Technology & Software Development">Information Technology (IT) & Software
+            Development</option>
+        <option value="Artificial Intelligence & Machine Learning">Artificial Intelligence & Machine Learning
+        </option>
+        <option value="Biotechnology & Life Sciences">Biotechnology & Life Sciences</option>
+        <option value="Research & Development">Research & Development (R&D)</option>
+        <option value="Data Science & Big Data Analytics">Data Science & Big Data Analytics</option>
+        <option value="Cybersecurity & Data Protection">Cybersecurity & Data Protection</option>
+        <option value="Cloud Computing & Infrastructure">Cloud Computing & Infrastructure</option>
+        <option value="Government & Public Administration">Government & Public Administration</option>
+        <option value="Nonprofit & Charity Organizations">Nonprofit & Charity Organizations</option>
+        <option value="Policy Research & Think Tanks">Policy Research & Think Tanks</option>
+        <option value="International Relations & Diplomacy">International Relations & Diplomacy</option>
+        <option value="Space Exploration & Aerospace Engineering">Space Exploration & Aerospace Engineering</option>
+        <option value="Blockchain & Cryptocurrency">Blockchain & Cryptocurrency</option>
+        <option value="E-commerce & Digital Marketplaces">E-commerce & Digital Marketplaces</option>
+        <option value="Virtual Reality & Augmented Reality">Virtual Reality (VR) & Augmented Reality (AR)</option>
+        <option value="Robotics & Automation">Robotics & Automation</option>
+        <option value="Electric Vehicles & Sustainable Transportation">Electric Vehicles (EVs) & Sustainable
+            Transportation</option>
+        <option value="Circular Economy & Recycling">Circular Economy & Recycling</option>
+        <option value="Climate Change Mitigation & Adaptation">Climate Change Mitigation & Adaptation</option>
+        <option value="Smart Cities & Internet of Things">Smart Cities & Internet of Things (IoT)</option>
+        <option value="Social Media & Influencer Marketing">Social Media & Influencer Marketing</option>
+        <option value="Ethical Fashion & Sustainable Textiles">Ethical Fashion & Sustainable Textiles</option>
+        <option value="Organic & Natural Products">Organic & Natural Products</option>
+        <option value="Arts, Crafts & Design">Arts, Crafts & Design</option>
+        <option value="Film, Television & Animation">Film, Television & Animation</option>
+        <option value="Music Production & Distribution">Music Production & Distribution</option>
+        <option value="Writing, Publishing & Journalism">Writing, Publishing & Journalism</option>
+        <option value="Gaming & Esports">Gaming & Esports</option>
+        <option value="Legal Services & Advocacy">Legal Services & Advocacy</option>
+        <option value="Human Resources & Talent Management">Human Resources & Talent Management</option>
+        <option value="Event Planning & Management">Event Planning & Management</option>
+        <option value="Safety & Security Services">Safety & Security Services</option>
+        <option value="Environmental Consulting & Conservation">Environmental Consulting & Conservation</option>
+        <option value="Disaster Management & Emergency Services">Disaster Management & Emergency Services</option>
+        <option value="Agritech & Precision Farming">Agritech & Precision Farming</option>
+    </select>
+
+    {% for sector, problems in sector_problems.items() %}
+    <div class="sector-container mb-5" data-sector="{{ sector }}">
+        <div class="sector-header bg-gradient p-3 mb-4 rounded">
+            <h4 class="mb-0">{{ sector }}</h4>
+        </div>
+
+        <div class="problem-list card p-4 shadow-sm rounded">
+            <ul class="list-unstyled">
+                {% for problem in problems %}
+                <li class="problem-item mb-4">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5 class="font-weight-bold">{{ problem.title }}</h5>
+                            <p class="card-text text-muted">{{ problem.description | truncate(120) }}</p>
+                        </div>
+                        <a href="{{ url_for('problem_details', problem_id=problem.id) }}"
+                            class="btn btn-outline-primary btn-sm">
+                            View Details
+                        </a>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+<hr>
+<div class="container mt-5">
+    <h2 class="text-center mb-4 text-primary font-weight-bold">Sector Problems Tailored to Your Daily Activities</h2>
+    <div class="row mt-4">
+        <div class="col-md">
+            <input type="text" id="searchInput" class="form-control" placeholder="Search Problems...">
+        </div>
+    </div>
+    <div class="problems-wrapper" style="overflow-x: auto; white-space: nowrap; padding-top: 20px;">
+        {% for problem in problems %}
+        <div class="col-md-4 mb-4" style="width: 350px; margin-right: 15px;">
+            <div class="problem-card card h-100 border-0 shadow">
+                <div class="card-header text-white" style="background: linear-gradient(135deg, #007bff, #6610f2);">
+                    <h5 class="mb-0 card-title">{{ problem.title | truncate(40) }}</h5>
+                </div>
+                <div class="card-body d-flex flex-column">
+                    <h6 class="text-muted mb-3 card-subtitle">Sector: {{ problem.sector }}</h6>
+                    <p class="card-text flex-grow-1">{{ problem.description | truncate(40) }}</p>
+                    <a href="{{ url_for('problem_details', problem_id=problem.id) }}"
+                        class="btn btn-outline-primary mt-3">Learn More</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+<hr>
+<style>
+    body {
+        font-family: 'Roboto', sans-serif;
+        background-color: #f8f9fa;
+    }
+
+    .problems-wrapper {
+        display: flex;
+        overflow-x: auto;
+
+        padding-bottom: 20px;
+
+        white-space: nowrap;
+
+    }
+
+
+    .problem-card {
+        border-radius: 12px;
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .problem-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+    }
+
+
+    .problem-card .card-header {
+        font-weight: bold;
+        font-size: 1.25rem;
+        border-top-left-radius: 12px;
+        border-top-right-radius: 12px;
+        padding: 15px;
+        background-size: cover;
+    }
+
+
+    .btn-outline-primary {
+        border-color: #007bff;
+        color: #007bff;
+        transition: background-color 0.3s, color 0.3s;
+    }
+
+    .btn-outline-primary:hover {
+        background-color: #007bff;
+        color: #fff;
+    }
+
+
+    @media (max-width: 768px) {
+        .problem-card .card-header {
+            font-size: 1rem;
+        }
+
+        .problem-card {
+            margin-bottom: 20px;
+        }
+    }
+</style>
+
+{% if user.user_type in ['entrepreneur_innovator', 'both'] %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4 text-primary font-weight-bold">Explore Problems by Your Sector</h2>
+
+    {% if user.sectors %}
+    <div id="sectorFilter" class="mb-4" style="display: none;">
+        <label for="sectorSelect">Filter by Your Sectors:</label>
+        <select id="sectorSelect" class="form-control" multiple>
+            {% for sector in user.sectors.split(', ') %}
+            <option value="{{ sector }}" selected>{{ sector }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    {% endif %}
+
+
+    <input type="text" id="sectorSearchInput" class="form-control mb-4 shadow-sm"
+        placeholder="Search Problems by Sector">
+
+    <div id="problemsContainer">
+        {% for sector, problems in sector_problems.items() %}
+        <div class="problem-sector card p-3 mb-4 shadow-sm" data-sector="{{ sector }}"
+            style="display: {% if sector in user.sectors.split(', ') %}block{% else %}none{% endif %}">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">{{ sector }}</h4>
+            </div>
+            <div class="card-body">
+                <ul class="list-unstyled">
+                    {% for problem in problems %}
+                    <li class="mb-3">
+                        <p class="text-muted card-text">{{ problem.description | truncate(100) }}</p>
+                        <a href="{{ url_for('problem_details', problem_id=problem.id) }}" class="text-primary">
+                            <strong>{{ problem.title }} ({{ problem.sector }})</strong>
+                        </a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+<hr>
+<style>
+    body {
+        font-family: 'Roboto', sans-serif;
+        background-color: #f4f6f9;
+    }
+
+
+    .card {
+        border-radius: 12px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+
+    .card-header {
+        background-color: #007bff;
+        border-radius: 12px 12px 0 0;
+        padding: 15px;
+    }
+
+    .card-header h4 {
+        font-size: 1.5rem;
+    }
+
+
+    .card-body {
+        padding: 20px;
+    }
+
+
+    .card-body a {
+        font-size: 1.1rem;
+        font-weight: 600;
+        transition: color 0.3s;
+    }
+
+
+    #sectorSearchInput {
+        font-size: 1.1rem;
+        padding: 10px;
+        border-radius: 10px;
+    }
+
+
+    .btn-link {
+        font-weight: 600;
+        font-size: 1.1rem;
+        text-decoration: none;
+    }
+
+    .btn-link:hover {
+        color: #0056b3;
+    }
+
+
+    #sectorFilter {
+        background-color: #fff;
+        border-radius: 10px;
+        padding: 15px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    #sectorSelect {
+        border-radius: 8px;
+        padding: 10px;
+    }
+
+
+    @media (max-width: 768px) {
+        .card-header h4 {
+            font-size: 1.2rem;
+        }
+
+        #sectorSearchInput {
+            font-size: 1rem;
+        }
+
+        .btn-link {
+            font-size: 1rem;
+        }
+    }
+</style>
+
+<script>
+    document.getElementById('sectorSearchInput').addEventListener('input', function () {
+        const query = this.value.toLowerCase();
+        const sectors = document.querySelectorAll('.problem-sector');
+
+        sectors.forEach(function (sector) {
+            const problems = sector.querySelectorAll('li');
+            let sectorMatches = false;
+
+            problems.forEach(function (problem) {
+                const title = problem.querySelector('a').textContent.toLowerCase();
+                const description = problem.querySelector('.card-text').textContent.toLowerCase();
+
+                if (title.includes(query) || description.includes(query)) {
+                    problem.style.display = '';
+                    sectorMatches = true;
+                } else {
+                    problem.style.display = 'none';
+                }
+            });
+
+
+            if (sectorMatches) {
+                sector.style.display = 'block';
+            } else {
+                sector.style.display = 'none';
+            }
+        });
+    });
+
+</script>
+{% endif %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const sectorSelect = document.getElementById('sectorSelect');
+        const problemsContainer = document.getElementById('problemsContainer');
+        const allSectors = problemsContainer.querySelectorAll('.problem-sector');
+
+
+        function filterProblemsBySectors() {
+            const selectedSectors = Array.from(sectorSelect.selectedOptions).map(option => option.value.trim().toLowerCase());
+
+            allSectors.forEach(function (sector) {
+                const sectorName = sector.getAttribute('data-sector').toLowerCase();
+
+
+                const sectorMatches = selectedSectors.some(function (selectedSector) {
+                    return sectorName.includes(selectedSector);
+                });
+
+
+                if (sectorMatches) {
+                    sector.style.display = 'block';
+                } else {
+                    sector.style.display = 'none';
+                }
+            });
+        }
+
+
+        filterProblemsBySectors();
+
+
+        sectorSelect.addEventListener('change', filterProblemsBySectors);
+    });
+</script>
+
+<script>
+
+    document.getElementById('generalSearchInput').addEventListener('input', function () {
+        const query = this.value.toLowerCase().trim();
+        const sectorContainers = document.querySelectorAll('.sector-container');
+
+        sectorContainers.forEach(function (sectorContainer) {
+            const problems = sectorContainer.querySelectorAll('li');
+            let sectorMatches = false;
+
+            problems.forEach(function (problem) {
+                const title = problem.querySelector('h5').textContent.toLowerCase();
+                const description = problem.querySelector('.card-text').textContent.toLowerCase();
+
+                if (title.includes(query) || description.includes(query)) {
+                    problem.style.display = '';
+                    sectorMatches = true;
+                } else {
+                    problem.style.display = 'none';
+                }
+            });
+
+
+            sectorContainer.style.display = sectorMatches ? 'block' : 'none';
+        });
+    });
+
+
+    document.getElementById('sectorSelects').addEventListener('change', function () {
+        const selectedSector = this.value.toLowerCase();
+        const sectorContainers = document.querySelectorAll('.sector-container');
+
+        sectorContainers.forEach(function (sectorContainer) {
+            const sectorName = sectorContainer.getAttribute('data-sector').toLowerCase();
+
+
+            if (selectedSector === '' || sectorName === selectedSector) {
+                sectorContainer.style.display = 'block';
+            } else {
+                sectorContainer.style.display = 'none';
+            }
+        });
+    });
+</script>
+
+<style>
+    body {
+        font-family: 'Roboto', sans-serif;
+        background-color: #f7f8fa;
+    }
+
+
+    .sector-header {
+        background: linear-gradient(45deg, #007bff, #6610f2);
+        border-radius: 8px;
+        padding: 20px;
+    }
+
+    .sector-header h4 {
+        font-size: 1.5rem;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+
+
+    .problem-list {
+        border-radius: 12px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        background-color: #ffffff;
+    }
+
+
+    .problem-item h5 {
+        font-size: 1.2rem;
+        font-weight: 600;
+    }
+
+    .problem-item p {
+        font-size: 1rem;
+        color: #6c757d;
+    }
+
+    .problem-item .btn-outline-primary {
+        font-size: 0.9rem;
+        border-radius: 20px;
+        padding: 8px 16px;
+        transition: all 0.3s ease;
+    }
+
+    .problem-item .btn-outline-primary:hover {
+        background-color: #007bff;
+        color: #fff;
+    }
+
+
+    #generalSearchInput {
+        font-size: 1.1rem;
+        padding: 10px;
+        border-radius: 20px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+
+    .btn-link {
+        font-weight: 600;
+        font-size: 1.1rem;
+        color: #007bff;
+    }
+
+    .btn-link:hover {
+        color: #0056b3;
+    }
+
+
+    @media (max-width: 768px) {
+        .sector-header h4 {
+            font-size: 1.3rem;
+        }
+
+        .problem-item h5 {
+            font-size: 1.1rem;
+        }
+
+        .problem-item p {
+            font-size: 0.9rem;
+        }
+
+        .btn-outline-primary {
+            font-size: 0.8rem;
+        }
+    }
+</style>
+{% endblock %}

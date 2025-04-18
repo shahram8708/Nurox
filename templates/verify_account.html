@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Verify Your Account</h2>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <h4 class="card-title">Email Verification</h4>
+
+
+            <form method="POST" action="{{ url_for('send_otps') }}" id="sendOtpForm">
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="email" name="email" value="{{ user.email }}" readonly>
+                </div>
+                <button type="submit" class="btn btn-primary" id="sendOtpButton">
+                    <span id="sendOtpText">Send OTP</span>
+                    <span id="sendOtpSpinner" class="spinner-border spinner-border-sm" style="display: none;"
+                        role="status" aria-hidden="true"></span>
+                </button>
+            </form>
+
+
+            {% if otp_sent %}
+            <form method="POST" action="{{ url_for('verify_otps') }}" class="mt-4" id="verifyOtpForm">
+                <div class="mb-3">
+                    <label for="otp" class="form-label">Enter OTP</label>
+                    <input type="text" class="form-control" id="otp" name="otp" placeholder="Enter OTP" required>
+                </div>
+                <button type="submit" class="btn btn-success" id="verifyOtpButton">
+                    <span id="verifyOtpText">Verify Your Account</span>
+                    <span id="verifyOtpSpinner" class="spinner-border spinner-border-sm" style="display: none;"
+                        role="status" aria-hidden="true"></span>
+                </button>
+            </form>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('sendOtpForm').addEventListener('submit', function (event) {
+        event.preventDefault();
+        var sendOtpButton = document.getElementById('sendOtpButton');
+        var sendOtpText = document.getElementById('sendOtpText');
+        var sendOtpSpinner = document.getElementById('sendOtpSpinner');
+
+        sendOtpButton.disabled = true;
+        sendOtpText.style.display = 'none';
+        sendOtpSpinner.style.display = 'inline-block';
+
+        this.submit();
+    });
+
+    document.getElementById('verifyOtpForm')?.addEventListener('submit', function (event) {
+        event.preventDefault();
+        var verifyOtpButton = document.getElementById('verifyOtpButton');
+        var verifyOtpText = document.getElementById('verifyOtpText');
+        var verifyOtpSpinner = document.getElementById('verifyOtpSpinner');
+
+        verifyOtpButton.disabled = true;
+        verifyOtpText.style.display = 'none';
+        verifyOtpSpinner.style.display = 'inline-block';
+
+        this.submit();
+    });
+</script>
+{% endblock %}

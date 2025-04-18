@@ -1,0 +1,399 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Admin Dashboard</h2>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <h4 class="mb-0">Send Email to All Users</h4>
+        </div>
+        <div class="card-body">
+            <form id="emailForm" method="POST" action="{{ url_for('send_email') }}" onsubmit="return sendEmail()">
+                <div class="mb-3">
+                    <label for="subject" class="form-label">Subject</label>
+                    <input type="text" class="form-control" id="subject" name="subject" required>
+                </div>
+                <div class="mb-3">
+                    <label for="message" class="form-label">Message</label>
+                    <textarea class="form-control" id="message" name="message" rows="4" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary" id="sendButton">Send Email</button>
+                <div id="loading" style="display: none;">
+                    <div class="spinner-border" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    Sending email...
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="card mb-4">
+        <div class="card-header">
+            <h4 class="mb-0">Create Post</h4>
+        </div>
+        <div class="card-body">
+            <form id="postForm" method="POST" action="{{ url_for('create_post') }}" enctype="multipart/form-data">
+                <div class="mb-3">
+                    <label for="title" class="form-label">Title</label>
+                    <input type="text" class="form-control" id="title" name="title" required>
+                </div>
+                <div class="mb-3">
+                    <label for="description" class="form-label">Description</label>
+                    <textarea class="form-control" id="description" name="description" rows="4" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Post</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <h4 class="mb-0">Manage Users</h4>
+        </div>
+        <div class="card-body">
+            <input type="text" id="userSearch" class="form-control mb-4" placeholder="Search Users (Name, Email)"
+                onkeyup="filterUserTable()">
+
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered table-hover" id="userTable">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>ID</th>
+                            <th>Email</th>
+                            <th>Name</th>
+                            <th>Verified</th>
+                            <th>View</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in users %}
+                        <tr>
+                            <td>{{ user.id }}</td>
+                            <td>{{ user.email }}</td>
+                            <td>{{ user.username }}</td>
+                            <td>
+                                {% if user.is_verified %}
+                                <p class="text-success">✔</p>
+                                {% else %}
+                                <p class="text-danger">✘</p>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <a href="{{ url_for('user_profile', user_id=user.id) }}"
+                                    class="btn btn-info btn-sm">Profile</a>
+                            </td>
+                            <td>
+                                <form method="POST" action="{{ url_for('delete_user', user_id=user.id) }}"
+                                    style="display:inline;">
+                                    <button type="submit" class="btn btn-danger btn-sm"
+                                        onclick="return confirm('Are you sure you want to delete this user?');">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <h4 class="mb-0">Manage Subscription</h4>
+        </div>
+        <div class="card-body">
+            <input type="text" id="subscriptionSearch" class="form-control mb-4"
+                placeholder="Search Subscriptions (Email, Type)" onkeyup="filterSubscriptionTable()">
+            <div class="table-responsive">
+                <table id="subscriptionTable" class="table table-striped table-bordered table-hover">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>User ID</th>
+                            <th>Email</th>
+                            <th>Subscription Type</th>
+                            <th>Transaction Number</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for subscription in subscriptions %}
+                        <tr>
+                            <td>{{ subscription.user.id }}</td>
+                            <td>{{ subscription.user.email }}</td>
+                            <td>{{ subscription.subscription_type }}</td>
+                            <td>{{ subscription.transaction_number }}</td>
+                            <td>
+                                {% if subscription.user.subscription_status == 'Active' %}
+                                Active
+                                {% else %}
+                                Pending
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if subscription.user.subscription_status == 'Pending Confirmation' %}
+                                <form action="{{ url_for('approve_subscription', subscription_id=subscription.id) }}"
+                                    method="POST">
+                                    <button type="submit" class="btn btn-success">Approve</button>
+                                </form>
+                                {% else %}
+                                <span class="text-success">Active</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <h4 class="mb-0">Manage Groups</h4>
+        </div>
+        <div class="card-body">
+            <input type="text" id="groupSearch" class="form-control mb-4" placeholder="Search Groups (Name, Username)"
+                onkeyup="filterGroupTable()">
+
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered table-hover" id="groupTable">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>ID</th>
+                            <th>Group Name</th>
+                            <th>Page</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for group in groups %}
+                        <tr>
+                            <td>{{ group.id }}</td>
+                            <td>{{ group.name }}</td>
+                            <td>
+                                <a href="{{ url_for('group_chat', group_id=group.id) }}"
+                                    class="btn btn-info btn-sm">View Group</a>
+                            </td>
+                            <td>
+                                <form action="{{ url_for('delete_groups', group_id=group.id) }}" method="POST"
+                                    style="display:inline;">
+                                    <button type="submit" class="btn btn-danger btn-sm"
+                                        onclick="return confirm('Are you sure you want to delete this group?');">Delete
+                                        Group</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <h4 class="mb-0">Manage Problems</h4>
+        </div>
+        <div class="card-body">
+            <input type="text" id="problemSearch" class="form-control mb-4"
+                placeholder="Search Problems (Sector, Title)" onkeyup="filterProblemTable()">
+
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered table-hover" id="problemTable">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>ID</th>
+                            <th>Sector</th>
+                            <th>Title</th>
+                            <th>View</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for problem in problems %}
+                        <tr>
+                            <td>{{ problem.id }}</td>
+                            <td>{{ problem.sector }}</td>
+                            <td>{{ problem.title }}</td>
+                            <td>
+                                <a href="{{ url_for('problem_details', problem_id=problem.id) }}"
+                                    class="btn btn-info btn-sm">View</a>
+                            </td>
+                            <td>
+                                <form action="{{ url_for('deletes_problem', problem_id=problem.id) }}" method="POST"
+                                    style="display:inline;">
+                                    <button type="submit" class="btn btn-danger btn-sm"
+                                        onclick="return confirm('Are you sure you want to delete this problem?');">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <h4 class="mb-0">Manage Stories</h4>
+        </div>
+        <div class="card-body">
+            <input type="text" id="storySearch" class="form-control mb-4"
+                placeholder="Search Stories (Content, Username)" onkeyup="filterStoryTable()">
+
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered table-hover" id="storyTable">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>ID</th>
+                            <th>Content</th>
+                            <th>Uploaded By</th>
+                            <th>View</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for story in stories %}
+                        <tr>
+                            <td>{{ story.id }}</td>
+                            <td>{{ story.content | truncate(100, True) }}</td>
+                            <td>{{ story.user.username }}</td>
+                            <td>
+                                <a href="{{ url_for('story_detail', story_id=story.id) }}"
+                                    class="btn btn-success btn-sm">View</a>
+                            </td>
+                            <td>
+                                <form action="{{ url_for('deletes_story', story_id=story.id) }}" method="POST"
+                                    style="display:inline;">
+                                    <button type="submit" class="btn btn-danger btn-sm"
+                                        onclick="return confirm('Are you sure you want to delete this story?');">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        #loading {
+            margin-top: 10px;
+            font-size: 1.2em;
+        }
+
+        .spinner-border {
+            width: 1.5rem;
+            height: 1.5rem;
+            margin-right: 5px;
+            vertical-align: text-bottom;
+        }
+    </style>
+
+    <script>
+        function filterSubscriptionTable() {
+            const input = document.getElementById('subscriptionSearch');
+            const filter = input.value.toLowerCase();
+            const table = document.getElementById('subscriptionTable');
+            const tr = table.getElementsByTagName("tr");
+
+            for (let i = 1; i < tr.length; i++) {
+                const tdEmail = tr[i].getElementsByTagName("td")[1];
+                const tdType = tr[i].getElementsByTagName("td")[2];
+                const emailValue = tdEmail ? tdEmail.textContent || tdEmail.innerText : '';
+                const typeValue = tdType ? tdType.textContent || tdType.innerText : '';
+
+                tr[i].style.display = (emailValue.toLowerCase().indexOf(filter) > -1 ||
+                    typeValue.toLowerCase().indexOf(filter) > -1) ? "" : "none";
+            }
+        }
+        function sendEmail() {
+            document.getElementById('sendButton').disabled = true;
+
+            document.getElementById('loading').style.display = 'flex';
+            document.getElementById('loading').style.alignItems = 'center';
+
+            return true;
+        }
+
+        function filterGroupTable() {
+            const input = document.getElementById('groupSearch');
+            const filter = input.value.toLowerCase();
+            const table = document.getElementById('groupTable');
+            const tr = table.getElementsByTagName("tr");
+
+            for (let i = 1; i < tr.length; i++) {
+                const tdGroupName = tr[i].getElementsByTagName("td")[1];
+                const groupNameValue = tdGroupName ? tdGroupName.textContent || tdGroupName.innerText : '';
+
+                tr[i].style.display = groupNameValue.toLowerCase().indexOf(filter) > -1 ? "" : "none";
+            }
+        }
+
+        function filterUserTable() {
+            const input = document.getElementById('userSearch');
+            const filter = input.value.toLowerCase();
+            const table = document.getElementById('userTable');
+            const tr = table.getElementsByTagName("tr");
+
+            for (let i = 1; i < tr.length; i++) {
+                const tdEmail = tr[i].getElementsByTagName("td")[1];
+                const tdUsername = tr[i].getElementsByTagName("td")[2];
+                const emailValue = tdEmail ? tdEmail.textContent || tdEmail.innerText : '';
+                const usernameValue = tdUsername ? tdUsername.textContent || tdUsername.innerText : '';
+
+                tr[i].style.display = (emailValue.toLowerCase().indexOf(filter) > -1 ||
+                    usernameValue.toLowerCase().indexOf(filter) > -1) ? "" : "none";
+            }
+        }
+
+        function filterProblemTable() {
+            let input = document.getElementById('problemSearch');
+            let filter = input.value.toUpperCase();
+            let table = document.getElementById('problemTable');
+            let rows = table.getElementsByTagName('tr');
+
+            for (let i = 1; i < rows.length; i++) {
+                let sector = rows[i].getElementsByTagName('td')[1];
+                let title = rows[i].getElementsByTagName('td')[2];
+                if (sector || title) {
+                    let sectorText = sector.textContent || sector.innerText;
+                    let titleText = title.textContent || title.innerText;
+                    if (sectorText.toUpperCase().indexOf(filter) > -1 || titleText.toUpperCase().indexOf(filter) > -1) {
+                        rows[i].style.display = '';
+                    } else {
+                        rows[i].style.display = 'none';
+                    }
+                }
+            }
+        }
+
+        function filterStoryTable() {
+            let input = document.getElementById('storySearch');
+            let filter = input.value.toUpperCase();
+            let table = document.getElementById('storyTable');
+            let rows = table.getElementsByTagName('tr');
+
+            for (let i = 1; i < rows.length; i++) {
+                let content = rows[i].getElementsByTagName('td')[1];
+                let username = rows[i].getElementsByTagName('td')[2];
+                if (content || username) {
+                    let contentText = content.textContent || content.innerText;
+                    let usernameText = username.textContent || username.innerText;
+                    if (contentText.toUpperCase().indexOf(filter) > -1 || usernameText.toUpperCase().indexOf(filter) > -1) {
+                        rows[i].style.display = '';
+                    } else {
+                        rows[i].style.display = 'none';
+                    }
+                }
+            }
+        }
+    </script>
+
+    {% endblock %}

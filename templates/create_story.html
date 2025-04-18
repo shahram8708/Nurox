@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg border-0 rounded">
+                <div class="card-header text-center bg-primary text-white">
+                    <h4 class="mb-0">Create Your Story</h4>
+                </div>
+                <div class="card-body p-5">
+                    <form action="{{ url_for('create_story') }}" method="POST">
+                        <div class="mb-4">
+                            <label for="content" class="form-label fs-5">Your Story</label>
+                            <textarea id="content" name="content" class="form-control" rows="6"
+                                placeholder="Write your story here..." required></textarea>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <label for="background_image" class="form-label fs-5">Choose Background Color</label>
+                                <input type="color" id="background_image" name="background_image"
+                                    class="form-control form-control-color" value="#ffffff" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="text_color" class="form-label fs-5">Choose Text Color</label>
+                                <input type="color" id="text_color" name="text_color"
+                                    class="form-control form-control-color" value="#000000" required>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <h5 class="mb-3">Preview</h5>
+                            <div id="story-preview" class="p-4 rounded"
+                                style="background-color: #ffffff; color: #000000; border: 1px solid #ddd;">
+                                <h5 id="preview-title" class="fs-4">Your Story Title</h5>
+                                <p id="preview-content">Your story content will appear here.</p>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-lg btn-primary w-100">Post Story</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    function updatePreview() {
+        var backgroundColor = document.getElementById('background_image').value;
+        var textColor = document.getElementById('text_color').value;
+
+        var previewDiv = document.getElementById('story-preview');
+        previewDiv.style.backgroundColor = backgroundColor;
+        previewDiv.style.color = textColor;
+    }
+
+
+    document.getElementById('background_image').addEventListener('input', updatePreview);
+    document.getElementById('text_color').addEventListener('input', updatePreview);
+
+
+    window.onload = updatePreview;
+</script>
+{% endblock %}

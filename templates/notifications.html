@@ -1,0 +1,182 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">Notifications</h2>
+    <form action="{{ url_for('delete_all_notifications') }}" method="POST">
+        <button type="submit" class="btn btn-danger mb-3">Delete All Notifications</button>
+    </form>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card mb-4" style="height: 70vh; overflow-y: auto;">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Your Notifications</h5>
+                </div>
+                <ul class="list-group list-group-flush">
+                    {% if notifications %}
+                    {% for notification in notifications %}
+                    {% if notification.notification_type == "login_alert" %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <span><strong>Security Alert:</strong> New login detected. If this wasn’t you, please
+                            <a href="{{ url_for('change_password') }}" style="text-decoration: none;"
+                                class="text-warning">Change Your Password</a> and <a href="{{ url_for('contact') }}"
+                                style="text-decoration: none;" class="text-primary">Contact Support</a>.
+                        </span>
+                        <span class="badge {{ 'bg-success' if notification.is_read else 'bg-danger' }} rounded-pill">
+                            {{ 'Read' if notification.is_read else 'New' }}
+                        </span>
+                    </li>
+                    {% elif notification.notification_type == "password_reset" %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <span><strong>Password Reset:</strong> {{ notification.msg }}</span>
+                        <span class="badge {{ 'bg-success' if notification.is_read else 'bg-danger' }} rounded-pill">
+                            {{ 'Read' if notification.is_read else 'New' }}
+                        </span>
+                    </li>
+                    {% elif notification.notification_type == "follow" %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <a href="{{ url_for('user_profile', user_id=notification.sender_id) }}"
+                            class="text-decoration-none">
+                            <strong>{{ notification.sender.username }}</strong> started following you.
+                        </a>
+                        <span class="badge {{ 'bg-success' if notification.is_read else 'bg-danger' }} rounded-pill">
+                            {{ 'Read' if notification.is_read else 'New' }}
+                        </span>
+                    </li>
+                    {% elif notification.notification_type == "profile_view" %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <a href="{{ url_for('user_profile', user_id=notification.sender_id) }}"
+                            class="text-decoration-none">
+                            <strong>{{ notification.sender.username }}</strong> viewed your profile.
+                        </a>
+                        <span class="badge {{ 'bg-success' if notification.is_read else 'bg-danger' }} rounded-pill">
+                            {{ 'Read' if notification.is_read else 'New' }}
+                        </span>
+                    </li>
+                    {% elif notification.notification_type == "comment" %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <a href="{{ url_for('problem_details', problem_id=notification.resource_id) }}"
+                            class="text-decoration-none">
+                            <em>{{ notification.msg}}</em>
+                        </a>
+                        <span class="badge {{ 'bg-success' if notification.is_read else 'bg-danger' }} rounded-pill">
+                            {{ 'Read' if notification.is_read else 'New' }}
+                        </span>
+                    </li>
+
+                    {% elif notification.notification_type == "comment_reply" %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <a href="{{ url_for('problem_details', problem_id=notification.resource_id) }}"
+                            class="text-decoration-none">
+                            <em>{{ notification.msg }}</em>
+                        </a>
+                        <span class="badge {{ 'bg-success' if notification.is_read else 'bg-danger' }} rounded-pill">
+                            {{ 'Read' if notification.is_read else 'New' }}
+                        </span>
+                    </li>
+
+                    {% elif notification.notification_type == "admin_promotion" %}
+                    <a href="{{ url_for('group_list') }}" class="text-decoration-none">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span><strong>Admin Promotion:</strong> {{ notification.msg }}</span>
+                            <span
+                                class="badge {{ 'bg-success' if notification.is_read else 'bg-danger' }} rounded-pill">
+                                {{ 'Read' if notification.is_read else 'New' }}
+                            </span>
+                        </li>
+                    </a>
+                    {% elif notification.notification_type == "admin_demotion" %}
+                    <a href="{{ url_for('group_list') }}" class="text-decoration-none">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span><strong>Admin Demotion:</strong> {{ notification.msg }}</span>
+                            <span
+                                class="badge {{ 'bg-danger' if notification.is_read else 'bg-success' }} rounded-pill">
+                                {{ 'Read' if notification.is_read else 'New' }}
+                            </span>
+                        </li>
+                    </a>
+                    {% elif notification.notification_type == "join_request" %}
+                    <a href="{{ url_for('group_list') }}" class="text-decoration-none">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span><strong>Join Request:</strong> {{ notification.msg }}</span>
+                            <span
+                                class="badge {{ 'bg-danger' if notification.is_read else 'bg-success' }} rounded-pill">
+                                {{ 'Read' if notification.is_read else 'New' }}
+                            </span>
+                        </li>
+                    </a>
+                    {% elif notification.notification_type == "approval" %}
+                    <a href="{{ url_for('group_list') }}" class="text-decoration-none">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span><strong>Approval:</strong> {{ notification.msg }}</span>
+                            <span
+                                class="badge {{ 'bg-success' if notification.is_read else 'bg-danger' }} rounded-pill">
+                                {{ 'Read' if notification.is_read else 'New' }}
+                            </span>
+                        </li>
+                    </a>
+                    {% elif notification.notification_type == "rejection" %}
+                    <a href="{{ url_for('group_list') }}" class="text-decoration-none">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span><strong>Rejection:</strong> {{ notification.msg }}</span>
+                            <span
+                                class="badge {{ 'bg-danger' if notification.is_read else 'bg-success' }} rounded-pill">
+                                {{ 'Read' if notification.is_read else 'New' }}
+                            </span>
+                        </li>
+                    </a>
+                    {% elif notification.notification_type == 'group_message' %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <span><strong>Group Message:</strong> {{ notification.msg }}</span>
+                        <span class="badge {{ 'bg-success' if notification.is_read else 'bg-danger' }} rounded-pill">
+                            {{ 'Read' if notification.is_read else 'New' }}
+                        </span>
+                    </li>
+                    {% elif notification.message_id is not none %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <a href="{{ url_for('chat', user_id=notification.sender_id) }}"
+                            class="text-decoration-none text-dark">
+                            <strong>{{ notification.sender.username }}</strong> sent you a message: "{{
+                            notification.message.content }}"
+                        </a>
+                        <span class="badge {{ 'bg-success' if notification.is_read else 'bg-danger' }} rounded-pill">
+                            {{ 'Read' if notification.is_read else 'New' }}
+                        </span>
+                    </li>
+                    {% endif %}
+                    {% endfor %}
+                    {% else %}
+                    <li class="list-group-item text-center">No notifications available.</li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card mb-4" style="height: 70vh; overflow-y: auto;">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">People You've Chatted With</h5>
+                </div>
+                <ul class="list-group list-group-flush">
+                    {% if unique_users %}
+                    {% for user in unique_users %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <a href="{{ url_for('chat', user_id=user.id) }}" class="text-decoration-none text-dark">
+                            <strong>{{ user.username }}</strong>
+                        </a>
+                        <form action="{{ url_for('delete_chat', user_id=user.id) }}" method="POST"
+                            style="display:inline;">
+                            <button type="submit" class="btn btn-danger btn-sm">Delete Chat</button>
+                        </form>
+                    </li>
+                    {% endfor %}
+                    {% else %}
+                    <li class="list-group-item text-center">No chat history available.</li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

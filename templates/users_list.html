@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-center mb-4">All Registered Users</h1>
+
+    <input type="text" id="userSearch" class="form-control mb-4" placeholder="Search Users"
+        onkeyup="filterTable('userTable', 'userSearch')">
+
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered table-hover" id="userTable">
+            <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Username</th>
+                    <th>Verified</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                {% if user.id != current_user.id %}
+                <tr>
+                    <td>{{ user.id }}</td>
+                    <td>{{ user.username }}</td>
+                    <td>
+                        {% if user.is_admin %}
+                        <p class="text-success">
+                            <i class="bi bi-person-badge"></i>
+                        </p>
+                        {% else %}
+                        {% if user.is_verified %}
+                        <p class="text-success">✔</p>
+                        {% else %}
+                        <p class="text-danger">✘</p>
+                        {% endif %}
+                        {% endif %}
+                    </td>
+                    <td>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <a href="{{ url_for('user_profile', user_id=user.id) }}"
+                                class="btn btn-primary btn-sm me-2">Profile</a>
+
+                            {% if user in followed_users %}
+                            <form method="POST" action="{{ url_for('unfollow_user', user_id=user.id) }}"
+                                style="display:inline;">
+                                <button type="submit" class="btn btn-danger btn-sm me-2">Unfollow</button>
+                            </form>
+                            {% else %}
+                            <form method="POST" action="{{ url_for('follow_user', user_id=user.id) }}"
+                                style="display:inline;">
+                                <button type="submit" class="btn btn-success btn-sm me-2">Follow</button>
+                            </form>
+                            {% endif %}
+
+                            <a href="{{ url_for('chat', user_id=user.id) }}" class="btn btn-info btn-sm">Chat</a>
+                        </div>
+                    </td>
+                </tr>
+                {% endif %}
+                {% endfor %}
+                {% if not users %}
+                <tr>
+                    <td colspan="4" class="text-center">No registered users found.</td>
+                </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    function filterTable(tableId, inputId) {
+        const input = document.getElementById(inputId);
+        const filter = input.value.toLowerCase();
+        const table = document.getElementById(tableId);
+        const tr = table.getElementsByTagName("tr");
+
+        for (let i = 1; i < tr.length; i++) {
+            const tdUsername = tr[i].getElementsByTagName("td")[1];
+            if (tdUsername) {
+                const txtValue = tdUsername.textContent || tdUsername.innerText;
+                tr[i].style.display = txtValue.toLowerCase().indexOf(filter) > -1 ? "" : "none";
+            }
+        }
+    }
+</script>
+
+{% endblock %}

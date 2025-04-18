@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="d-flex align-items-center justify-content-center vh-100 bg-light">
+    <div class="text-center p-5 rounded shadow-lg bg-white" style="max-width: 600px;">
+        <div class="mb-4">
+            <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" fill="#6c757d"
+                class="bi bi-exclamation-triangle" viewBox="0 0 16 16">
+                <path
+                    d="M7.938 2.016a.13.13 0 0 1 .125 0c.05.027.05.08.057.115l.013.083L7.918 12h.074l.015.145.001.007a.483.483 0 0 0 .03.13c.013.045.03.083.045.123.021.048.049.09.075.133.03.045.063.09.098.135.036.045.076.087.117.127.04.039.083.073.126.104.046.032.096.059.147.085.048.023.097.042.146.058.057.02.116.036.176.049a.868.868 0 0 0 .187.018h.142a1.007 1.007 0 0 0 .336-.07c.047-.02.093-.04.138-.063.055-.03.109-.063.161-.099.05-.032.097-.069.144-.108.05-.042.096-.086.142-.134.046-.046.09-.096.132-.147a1.527 1.527 0 0 0 .11-.164.92.92 0 0 0 .069-.176c.014-.055.027-.11.038-.166L8.937 2.252a.13.13 0 0 1 .001-.073.063.063 0 0 0-.062-.076c-.01 0-.02-.002-.03-.003H8.797a.13.13 0 0 1-.073-.017zM6.002 1a1 1 0 0 0-.997.923l-.003.077L5.001 5H3a1 1 0 0 0-.916.564l-.038.066-.723 1.573a2.73 2.73 0 0 0-.258.707l-.015.114-.008.143v3.866a2.108 2.108 0 0 0 .58 1.575c.319.333.744.564 1.227.68l.1.021H6a.063.063 0 0 0 .052-.023.125.125 0 0 1 .104-.049h1.688c.038 0 .075-.015.103-.043a.063.063 0 0 0 .027-.05V11H8a.062.062 0 0 0-.038-.06L7.906 11a1 1 0 0 0-.902-.547h-3.59l-.07.033-.028.015-.005.003H5l.69-1.5 2.632-5.781a2.129 2.129 0 0 0-.493-2.388L7.295 1H6.002zm6 13H4v-1h8v1z" />
+            </svg>
+        </div>
+        <h1 class="display-5 text-dark">Oops! Page Not Found</h1>
+        <p class="lead text-muted mt-3">
+            It seems the page you are looking for doesn’t exist. Let’s get you back on track.
+        </p>
+        <div class="mt-4">
+            <a href="{{ url_for('home') }}" class="btn btn-primary btn-lg px-4 me-2">
+                <i class="bi bi-house"></i> Home
+            </a>
+            <a href="{{ url_for('contact') }}" class="btn btn-outline-dark btn-lg px-4">
+                <i class="bi bi-envelope"></i> Contact Us
+            </a>
+        </div>
+        <div class="mt-5">
+            <small class="text-muted">
+                If you believe this is an error, please reach out to our support team.
+            </small>
+        </div>
+    </div>
+</div>
+{% endblock %}

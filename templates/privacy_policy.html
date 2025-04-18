@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+
+    <div class="text-center mb-5">
+        <h1 class="display-4 font-weight-bold">Privacy Policy</h1>
+        <p class="lead text-muted">Your privacy is important to us at Nurox. We ensure your data is protected and
+            used transparently.</p>
+    </div>
+
+
+    <div class="card shadow-lg p-4 rounded-lg border-0">
+        <div class="card-body">
+            <h5 class="font-weight-bold text-primary mb-3">1. Information Collection</h5>
+            <p>We collect the following information when you interact with our platform:</p>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item"><strong>Personal Information:</strong> Name, email, and other details shared
+                    during registration.</li>
+                <li class="list-group-item"><strong>Usage Data:</strong> Automatically collected data, including IP
+                    address, browser type, and access times for security and analysis purposes.</li>
+            </ul>
+
+            <h5 class="font-weight-bold text-primary mt-4 mb-3">2. Use of Information</h5>
+            <p>Your information is used for the following purposes:</p>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item"><strong>Service Improvement:</strong> To enhance your experience and tailor
+                    our services to your needs.</li>
+                <li class="list-group-item"><strong>Communication:</strong> To send important notifications and updates
+                    related to your account or our services.</li>
+                <li class="list-group-item"><strong>Security:</strong> To maintain the safety of your account and our
+                    platform.</li>
+            </ul>
+
+            <h5 class="font-weight-bold text-primary mt-4 mb-3">3. Data Protection & Security</h5>
+            <p>We are committed to ensuring the security of your personal information. Our security measures include:
+            </p>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">Encryption of sensitive data to prevent unauthorized access.</li>
+                <li class="list-group-item">Access controls and security protocols to restrict unauthorized account
+                    access.</li>
+                <li class="list-group-item">Regular audits and system checks to ensure data protection.</li>
+            </ul>
+
+            <h5 class="font-weight-bold text-primary mt-4 mb-3">4. Sharing of Information</h5>
+            <p>Your personal information will never be sold or shared with third parties without your consent, except in
+                the following cases:</p>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">When required by law or to comply with legal processes.</li>
+                <li class="list-group-item">To protect the rights, property, or safety of Nurox and its users.
+                </li>
+            </ul>
+
+            <h5 class="font-weight-bold text-primary mt-4 mb-3">5. Cookies & Tracking Technologies</h5>
+            <p>We use cookies to improve your experience by customizing content and tracking usage patterns. You can
+                manage your cookie preferences via your browser settings.</p>
+
+            <h5 class="font-weight-bold text-primary mt-4 mb-3">6. User Rights & Control</h5>
+            <p>You have the right to access, update, or delete your personal information at any time. For any privacy
+                concerns, or if you wish to exercise these rights, please reach out to us via our <a
+                    href="{{ url_for('contact') }}" class="text-decoration-none text-primary">Contact Us</a> page.</p>
+
+            <h5 class="font-weight-bold text-primary mt-4 mb-3">7. Changes to the Privacy Policy</h5>
+            <p>We may update this Privacy Policy periodically. Significant changes will be communicated to you through
+                email or platform notifications. By continuing to use our services, you agree to the updated terms.</p>
+
+            <p>If you have any questions or concerns about this Privacy Policy or how we handle your data, feel free to
+                <a href="{{ url_for('contact') }}" class="text-decoration-none text-primary">Contact Us</a>. We are
+                dedicated to ensuring your privacy and security.</p>
+        </div>
+    </div>
+</div>
+
+
+<style>
+    .card-body {
+        background-color: #f9f9f9;
+    }
+
+    .list-group-item {
+        border: none;
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    .list-group-item:first-child {
+        padding-top: 10px;
+    }
+
+    .list-group-item:last-child {
+        padding-bottom: 10px;
+    }
+
+    h5 {
+        font-size: 1.25rem;
+    }
+
+    .display-4 {
+        font-size: 2.5rem;
+        font-weight: 600;
+    }
+
+    .lead {
+        font-size: 1.1rem;
+        color: #6c757d;
+    }
+</style>
+{% endblock %}

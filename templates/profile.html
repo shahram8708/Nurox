@@ -1,0 +1,914 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4">{{ user.username }}'s Profile</h2>
+
+    <div class="card mb-4 shadow-sm">
+        <div class="card-body">
+            <h4 class="card-title">Profile Information</h4>
+            <h6 class="card-subtitle mb-2 text-muted">{{
+                user.get_enrollment_number() }}
+            </h6>
+
+            <h6 class="card-subtitle mb-2 text-muted">{{
+                user.branch if
+                user.branch else '' }}</h6>
+            <h6 class="card-subtitle mb-2 text-muted">{{ user.college if
+                user.college else '' }}</h6>
+            <h6 class="card-subtitle mb-2 text-muted">{{ user.bio if user.bio else
+                '' }}</h6>
+            <h6 class="card-subtitle mb-2 text-muted">
+                <strong>User Type:</strong>
+                {% if user.user_type %}
+                {% if user.user_type == 'entrepreneur_innovator' %}
+                Entrepreneur Innovator
+                {% elif user.user_type == 'everyday_problem_solver' %}
+                Everyday Problem Solver
+                {% elif user.user_type == 'both' %}
+                Both (Problem Solver & Innovator)
+                {% elif user.user_type == 'other' %}
+                Other (Supporter/Observer)
+                {% else %}
+                {{ user.user_type }}
+                {% endif %}
+                {% else %}
+                Not specified
+                {% endif %}
+            </h6>
+            {% if user.user_type in ['entrepreneur_innovator', 'both'] %}
+            <h6 class="card-subtitle mb-2 text-muted">
+                <strong>Sector:</strong> {{ user.sectors if user.sectors else 'Not specified' }}
+            </h6>
+            {% endif %}
+            <h6 class="card-subtitle mb-2 text-muted"><span class="text-dark">Total Points:</span> {{ user.points }}
+            </h6>
+            <div class="mt-3">
+                <h6 class="card-subtitle mb-2 text-muted">
+                    <a href="{{ url_for('followers', user_id=user.id) }}" class="text-decoration-none">
+                        Followers: {{ user.followers.count() }}
+                    </a>
+                </h6>
+                <h6 class="card-subtitle mb-2 text-muted">
+                    <a href="{{ url_for('following', user_id=user.id) }}" class="text-decoration-none">
+                        Following: {{ user.followed.count() }}
+                    </a>
+                </h6>
+            </div>
+            <div class="mt-3">
+                {% if not user.is_verified %}
+                <a href="{{ url_for('verify_account') }}" class="btn btn-primary mb-2 mt-2">Verify Your Account</a>
+                {% endif %}
+
+                {% if user.is_admin %}
+                <p class="text-success">
+                    ✔ <strong>System Administrator</strong>
+                </p>
+                {% elif user.is_verified %}
+                <p class="text-success">✔ Account Verified</p>
+                {% endif %}
+                <a href="{{ url_for('edit_profile') }}" class="btn btn-secondary">Edit Profile</a>
+                <a href="{{ url_for('change_password') }}" class="btn btn-warning">Change Password</a>
+                <a class="btn btn-danger" href="{{ url_for('logout') }}">Logout</a>
+                <button class="btn btn-info me-3 mb-2 mt-2" onclick="copyProfileLink()">Share Profile</button>
+            </div>
+
+            {% if user.points >= 100 %}
+            <p class="mt-3 text-success">🎉 Congratulations! You have earned 100 points.</p>
+            {% endif %}
+        </div>
+    </div>
+    <hr>
+    <div class="container mt-5">
+        <h2 class="text-center mb-4 text-primary font-weight-bold">Your Subscription Status</h2>
+
+        <div class="card shadow-lg border-light rounded">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">Subscription Details</h4>
+            </div>
+            <div class="card-body">
+                <p><strong>Subscription Status:</strong> <span class="text-capitalize">{{ user.subscription_status
+                        }}</span>
+                </p>
+                <p><strong>Subscription Type:</strong> {{ user.subscription_type }}</p>
+
+                {% if user.subscription_type == 'Lifetime' %}
+                <p><strong>Expiry Date:</strong> Lifetime</p>
+                {% elif user.subscription_expiry %}
+                <p><strong>Expiry Date:</strong> {{ user.subscription_expiry.strftime('%Y-%m-%d') }}</p>
+                {% else %}
+                <p><strong>Expiry Date:</strong> Not available</p>
+                {% endif %}
+                {% if user.subscription_status != 'Active' %}
+                <p class="text-warning">You don't have an active subscription. To access premium features <a
+                        href="{{ url_for('subscribe') }}" class="btn btn-primary btn-sm">Click here to subscribe</a>.
+                </p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <hr>
+    <div class="row mt-4">
+        <h3 class="mb-4 text-primary">Uploaded Problems</h3>
+        <div class="col-md">
+
+            <div class="mb-4">
+                <input type="text" id="generalSearchInput" class="form-control mb-2"
+                    placeholder="Search by Title, Description or Sector">
+                <select id="sectorSelect" class="form-control">
+                    <option value="">-- Select Sector --</option>
+                    <option value="Agriculture, Forestry & Fishing">Agriculture, Forestry & Fishing</option>
+                    <option value="Mining & Quarrying">Mining & Quarrying</option>
+                    <option value="Oil & Gas Exploration">Oil & Gas Exploration</option>
+                    <option value="Renewable Energy">Renewable Energy (Solar, Wind, Hydropower, etc.)</option>
+                    <option value="Water Resource Management">Water Resource Management</option>
+                    <option value="Food & Beverage Processing">Food & Beverage Processing</option>
+                    <option value="Textile & Apparel Manufacturing">Textile & Apparel Manufacturing</option>
+                    <option value="Automotive & Transportation Equipment">Automotive & Transportation Equipment</option>
+                    <option value="Electronics & Semiconductors">Electronics & Semiconductors</option>
+                    <option value="Chemical Manufacturing">Chemical Manufacturing</option>
+                    <option value="Pharmaceutical Manufacturing">Pharmaceutical Manufacturing</option>
+                    <option value="Construction & Building Materials">Construction & Building Materials</option>
+                    <option value="Metalworking & Fabrication">Metalworking & Fabrication</option>
+                    <option value="Plastics & Rubber Products">Plastics & Rubber Products</option>
+                    <option value="Aerospace & Defense Manufacturing">Aerospace & Defense Manufacturing</option>
+                    <option value="Healthcare & Medical Services">Healthcare & Medical Services</option>
+                    <option value="Education & E-learning">Education & E-learning</option>
+                    <option value="Tourism, Hospitality & Leisure">Tourism, Hospitality & Leisure</option>
+                    <option value="Retail & Consumer Goods">Retail & Consumer Goods</option>
+                    <option value="Financial Services">Financial Services (Banking, Insurance, Investment)</option>
+                    <option value="Logistics & Supply Chain Management">Logistics & Supply Chain Management</option>
+                    <option value="Real Estate & Property Management">Real Estate & Property Management</option>
+                    <option value="Telecommunications & Networking">Telecommunications & Networking</option>
+                    <option value="Media & Entertainment">Media & Entertainment</option>
+                    <option value="Sports & Recreation">Sports & Recreation</option>
+                    <option value="Information Technology & Software Development">Information Technology (IT) & Software
+                        Development</option>
+                    <option value="Artificial Intelligence & Machine Learning">Artificial Intelligence & Machine
+                        Learning
+                    </option>
+                    <option value="Biotechnology & Life Sciences">Biotechnology & Life Sciences</option>
+                    <option value="Research & Development">Research & Development (R&D)</option>
+                    <option value="Data Science & Big Data Analytics">Data Science & Big Data Analytics</option>
+                    <option value="Cybersecurity & Data Protection">Cybersecurity & Data Protection</option>
+                    <option value="Cloud Computing & Infrastructure">Cloud Computing & Infrastructure</option>
+                    <option value="Government & Public Administration">Government & Public Administration</option>
+                    <option value="Nonprofit & Charity Organizations">Nonprofit & Charity Organizations</option>
+                    <option value="Policy Research & Think Tanks">Policy Research & Think Tanks</option>
+                    <option value="International Relations & Diplomacy">International Relations & Diplomacy</option>
+                    <option value="Space Exploration & Aerospace Engineering">Space Exploration & Aerospace Engineering
+                    </option>
+                    <option value="Blockchain & Cryptocurrency">Blockchain & Cryptocurrency</option>
+                    <option value="E-commerce & Digital Marketplaces">E-commerce & Digital Marketplaces</option>
+                    <option value="Virtual Reality & Augmented Reality">Virtual Reality (VR) & Augmented Reality (AR)
+                    </option>
+                    <option value="Robotics & Automation">Robotics & Automation</option>
+                    <option value="Electric Vehicles & Sustainable Transportation">Electric Vehicles (EVs) & Sustainable
+                        Transportation</option>
+                    <option value="Circular Economy & Recycling">Circular Economy & Recycling</option>
+                    <option value="Climate Change Mitigation & Adaptation">Climate Change Mitigation & Adaptation
+                    </option>
+                    <option value="Smart Cities & Internet of Things">Smart Cities & Internet of Things (IoT)</option>
+                    <option value="Social Media & Influencer Marketing">Social Media & Influencer Marketing</option>
+                    <option value="Ethical Fashion & Sustainable Textiles">Ethical Fashion & Sustainable Textiles
+                    </option>
+                    <option value="Organic & Natural Products">Organic & Natural Products</option>
+                    <option value="Arts, Crafts & Design">Arts, Crafts & Design</option>
+                    <option value="Film, Television & Animation">Film, Television & Animation</option>
+                    <option value="Music Production & Distribution">Music Production & Distribution</option>
+                    <option value="Writing, Publishing & Journalism">Writing, Publishing & Journalism</option>
+                    <option value="Gaming & Esports">Gaming & Esports</option>
+                    <option value="Legal Services & Advocacy">Legal Services & Advocacy</option>
+                    <option value="Human Resources & Talent Management">Human Resources & Talent Management</option>
+                    <option value="Event Planning & Management">Event Planning & Management</option>
+                    <option value="Safety & Security Services">Safety & Security Services</option>
+                    <option value="Environmental Consulting & Conservation">Environmental Consulting & Conservation
+                    </option>
+                    <option value="Disaster Management & Emergency Services">Disaster Management & Emergency Services
+                    </option>
+                    <option value="Agritech & Precision Farming">Agritech & Precision Farming</option>
+                </select>
+            </div>
+
+            <ul class="list-group" id="problemList">
+                {% for problem in problems_uploaded %}
+                <li class="list-group-item problem-item shadow-sm mb-3 border-0 rounded"
+                    data-sector="{{ problem.sector }}">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h5>{{ problem.title }}</h5>
+                            <p>{{ problem.description | truncate(100) }}</p>
+                            <p><strong>Sector:</strong> {{ problem.sector }}</p>
+                        </div>
+                        <div>
+                            <a href="{{ url_for('problem_details', problem_id=problem.id) }}"
+                                class="btn btn-outline-primary btn-sm">View Details</a>
+                        </div>
+                    </div>
+                </li>
+                {% else %}
+                <li class="list-group-item">No problems uploaded yet.</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    <hr>
+    <script>
+
+        document.getElementById('generalSearchInput').addEventListener('input', function () {
+            const query = this.value.toLowerCase().trim();
+            const problems = document.querySelectorAll('.problem-item');
+
+            problems.forEach(function (problem) {
+                const title = problem.querySelector('h5').textContent.toLowerCase();
+                const description = problem.querySelector('p').textContent.toLowerCase();
+                const sector = problem.getAttribute('data-sector').toLowerCase();
+
+                if (title.includes(query) || description.includes(query) || sector.includes(query)) {
+                    problem.style.display = '';
+                } else {
+                    problem.style.display = 'none';
+                }
+            });
+        });
+
+
+        document.getElementById('sectorSelect').addEventListener('change', function () {
+            const selectedSector = this.value.toLowerCase();
+            const problems = document.querySelectorAll('.problem-item');
+
+            problems.forEach(function (problem) {
+                const sector = problem.getAttribute('data-sector').toLowerCase();
+
+
+                if (selectedSector === '' || sector.includes(selectedSector)) {
+                    problem.style.display = '';
+                } else {
+                    problem.style.display = 'none';
+                }
+            });
+        });
+    </script>
+    <div class="row mt-4">
+        <div class="col-md">
+            <h3 class="mb-4 text-primary">Uploaded Stories</h3>
+
+            <div class="mb-4">
+                <input type="text" id="searchInput" class="form-control" placeholder="Search stories by description..."
+                    onkeyup="filterStories()" />
+            </div>
+
+
+            <div id="storyList">
+                {% for story in stories %}
+                <div class="card mb-4 shadow-lg border-0 rounded story-card"
+                    data-description="{{ story.content | lower }}">
+                    <div class="card-body"
+                        style="background-color: {{ story.background_image }}; color: {{ story.text_color }};"
+                        id="story-{{ story.id }}">
+
+                        <h5 class="card-title text-uppercase font-weight-bold mb-3" id="story-title-{{ story.id }}">
+                            <span class="text-light bg-dark p-2 rounded">{{ story.user.username }}</span>
+                        </h5>
+
+
+                        <p class="card-text" id="story-content-{{ story.id }}">
+                            {{ story.content | truncate(100, True) }}
+                        </p>
+
+
+                        <p class="card-text" id="story-content-{{ story.id }}">
+                            <small>Posted on {{ story.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</small>
+                        </p>
+                        <a href="{{ url_for('story_detail', story_id=story.id) }}" id="story-content-{{ story.id }}"
+                            class="btn btn-outline-primary btn-sm">View Story</a>
+                        <button class="btn btn-outline-secondary btn-sm"
+                            onclick="copyStoryLink('{{ url_for('story_detail', story_id=story.id, _external=True) }}')">
+                            <i class="fas fa-share-alt"></i> Share
+                        </button>
+                        <script>
+                            function copyStoryLink(link) {
+                                navigator.clipboard.writeText(link).then(() => {
+                                    alert('Story link copied to clipboard!');
+                                }).catch(err => {
+                                    console.error('Failed to copy text: ', err);
+                                });
+                            }
+                        </script>
+                    </div>
+
+
+                    {% if story.user.id == current_user.id %}
+                    <div class="card-footer bg-transparent d-flex justify-content-between align-items-center">
+                        <div class="btn-group" role="group">
+                            <a href="{{ url_for('edit_story', story_id=story.id) }}" class="btn btn-outline btn-sm">
+                                <i class="fas fa-edit"></i> Edit
+                            </a>
+                            <form action="{{ url_for('delete_story', story_id=story.id) }}" method="POST"
+                                onsubmit="return confirm('Are you sure you want to delete this story?');">
+                                <button type="submit" class="btn btn-outline-danger btn-sm">
+                                    <i class="fas fa-trash-alt"></i> Delete
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+                {% else %}
+                <div class="alert alert-info">No stories uploaded yet.</div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        function filterStories() {
+            var input, filter, stories, storyCards, description, i, txtValue;
+            input = document.getElementById('searchInput');
+            filter = input.value.toLowerCase();
+            stories = document.getElementById("storyList");
+            storyCards = stories.getElementsByClassName('story-card');
+
+            for (i = 0; i < storyCards.length; i++) {
+                description = storyCards[i].getAttribute('data-description');
+                if (description.indexOf(filter) > -1) {
+                    storyCards[i].style.display = "";
+                } else {
+                    storyCards[i].style.display = "none";
+                }
+            }
+        }
+    </script>
+    <hr>
+    <div class="row mt-4">
+        <div class="col-md">
+            <input type="text" id="searchInput" class="form-control" placeholder="Search Groups...">
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-md">
+            <h3 class="mb-4 text-primary">Your Groups</h3>
+            <div class="row">
+                {% for group in groups %}
+                <div class="col-md-6 col-lg-4 mb-4 group-item" data-type="group" data-name="{{ group.name }}">
+                    <div class="card shadow-lg border-0 rounded-3">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="card-title mb-0">{{ group.name }}</h5>
+                            <small class="d-block">{{ group.description }}</small>
+                            <small class="d-block">
+                                {% if group.is_public %}
+                                <span class="badge bg-success">Public</span>
+                                {% else %}
+                                <span class="badge bg-secondary">Private</span>
+                                {% endif %}
+                            </small>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                {% if group.created_by == current_user.id %}
+                                <span class="badge bg-info text-white">You are the Admin</span>
+                                {% else %}
+                                {% set membership = group.members | selectattr("user_id", "equalto", current_user.id) |
+                                first %}
+                                {% if membership %}
+                                {% if membership.is_approved %}
+                                <form action="{{ url_for('leave_group', group_id=group.id) }}" method="POST">
+                                    <button type="submit" class="btn btn-outline-danger btn-sm">Leave Group</button>
+                                </form>
+                                {% else %}
+                                <span class="badge bg-warning">Request Sent - Awaiting Approval</span>
+                                {% endif %}
+                                {% else %}
+                                <form action="{{ url_for('join_group', group_id=group.id) }}" method="POST">
+                                    <button type="submit" class="btn btn-outline-primary btn-sm">Join Group</button>
+                                </form>
+                                {% endif %}
+                                {% endif %}
+                            </div>
+                            <a href="{{ url_for('group_chat', group_id=group.id) }}"
+                                class="btn btn-secondary btn-block mb-2">Open
+                                Chat</a>
+
+                            {% if group.created_by == current_user.id %}
+                            <form action="{{ url_for('delete_group', group_id=group.id) }}" method="POST"
+                                onsubmit="return confirm('Are you sure you want to delete this group and its messages?');">
+                                <button type="submit" class="btn btn-danger btn-sm btn-block">Delete Group</button>
+                            </form>
+                            <form action="{{ url_for('edit_group', group_id=group.id) }}" method="GET" class="mt-2">
+                                <button type="submit" class="btn btn-warning btn-sm btn-block">Edit Group</button>
+                            </form>
+                            {% endif %}
+
+                            <form action="{{ url_for('delete_chats', group_id=group.id) }}" method="POST"
+                                onsubmit="return confirm('Are you sure you want to delete all chat messages on this device?');"
+                                class="mt-2">
+                                <button type="submit" class="btn btn-warning btn-sm btn-block">Delete Chat</button>
+                            </form>
+                            <button class="btn btn-outline-secondary btn-sm btn-block mt-2"
+                                onclick="copyGroupLink('{{ url_for('group_chat', group_id=group.id, _external=True) }}')">Share</button>
+                            <script>
+                                function copyGroupLink(link) {
+                                    navigator.clipboard.writeText(link).then(() => {
+                                        alert('Group link copied to clipboard!');
+                                    }).catch(err => {
+                                        console.error('Failed to copy link: ', err);
+                                    });
+                                }
+                            </script>
+
+                        </div>
+                        <div class="card-footer bg-light">
+                            <button class="btn btn-info btn-sm btn-block" data-bs-toggle="collapse"
+                                data-bs-target="#membersCollapse{{ group.id }}" aria-expanded="false"
+                                aria-controls="membersCollapse{{ group.id }}">
+                                Toggle Members
+                            </button>
+                            <p class="mt-2 text-center">
+                                Total Members: {{ group.members | length + 1 }}
+                            </p>
+                            <div class="collapse mt-3" id="membersCollapse{{ group.id }}">
+                                <ul class="list-group list-group-flush">
+                                    {% set admin_user = group.created_by %}
+                                    {% set admin = users | selectattr('id', 'equalto', admin_user) | first %}
+                                    {% if admin %}
+                                    <li class="list-group-item bg-light border-bottom">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <strong>{{ admin.username }}</strong>
+                                            <span class="badge bg-info">Admin</span>
+                                        </div>
+                                    </li>
+                                    {% else %}
+                                    <li class="list-group-item">Admin not found.</li>
+                                    {% endif %}
+
+                                    {% for member in group.members %}
+                                    <li class="list-group-item d-flex justify-content-between align-items-center py-3">
+                                        <div class="d-flex align-items-center">
+                                            <span class="me-2">{{ member.user.username }}</span>
+
+                                            {% if member.is_admin %}
+                                            <span class="badge bg-info me-2">Admin</span>
+                                            {% elif member.is_approved %}
+                                            <span class="badge bg-success me-2">Approved</span>
+                                            {% else %}
+                                            <span class="badge bg-warning me-2">Pending</span>
+                                            {% if group.created_by == current_user.id %}
+                                            <form action="{{ url_for('approve_member', membership_id=member.id) }}"
+                                                method="POST" style="display:inline;">
+                                                <button type="submit"
+                                                    class="btn btn-success btn-sm me-2">Approve</button>
+                                            </form>
+                                            <form action="{{ url_for('reject_member', membership_id=member.id) }}"
+                                                method="POST" style="display:inline;">
+                                                <button type="submit" class="btn btn-danger btn-sm me-2">Reject</button>
+                                            </form>
+                                            {% endif %}
+                                            {% endif %}
+                                        </div>
+
+                                        <div class="d-flex">
+
+                                            {% if group.created_by == current_user.id and member.user.id !=
+                                            current_user.id %}
+                                            <form
+                                                action="{{ url_for('remove_member', group_id=group.id, user_id=member.user.id) }}"
+                                                method="POST" class="me-2">
+                                                <button type="submit" class="btn btn-danger btn-sm"
+                                                    data-bs-toggle="tooltip" data-bs-placement="top"
+                                                    title="Remove from Group">
+                                                    Kick
+                                                </button>
+                                            </form>
+                                            {% endif %}
+
+
+                                            {% if group.created_by == current_user.id %}
+                                            {% if not member.is_admin %}
+                                            <form
+                                                action="{{ url_for('promote_to_admin', group_id=group.id, user_id=member.user.id) }}"
+                                                method="POST" class="me-2">
+                                                <button type="submit" class="btn btn-success btn-sm"
+                                                    data-bs-toggle="tooltip" data-bs-placement="top"
+                                                    title="Promote to Admin">
+                                                    Promote
+                                                </button>
+                                            </form>
+                                            {% else %}
+                                            <form
+                                                action="{{ url_for('demote_from_admin', group_id=group.id, user_id=member.user.id) }}"
+                                                method="POST" class="me-2">
+                                                <button type="submit" class="btn btn-danger btn-sm"
+                                                    data-bs-toggle="tooltip" data-bs-placement="top"
+                                                    title="Remove Admin Privileges">
+                                                    Demote
+                                                </button>
+                                            </form>
+                                            {% endif %}
+                                            {% endif %}
+                                        </div>
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+
+                                <style>
+                                    .list-group-item {
+                                        border-radius: 10px;
+                                        background-color: #f8f9fa;
+                                        transition: all 0.3s ease;
+                                    }
+
+                                    .list-group-item:hover {
+                                        background-color: #e9ecef;
+                                        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+                                    }
+
+                                    .list-group-item .badge {
+                                        font-size: 0.85rem;
+                                        padding: 0.4em 0.6em;
+                                    }
+
+                                    .btn-sm {
+                                        font-size: 0.85rem;
+                                        padding: 0.25rem 0.75rem;
+                                    }
+
+                                    .btn-danger {
+                                        background-color: #dc3545;
+                                        border: 1px solid #dc3545;
+                                    }
+
+                                    .btn-danger:hover {
+                                        background-color: #c82333;
+                                    }
+
+                                    .btn-success {
+                                        background-color: #28a745;
+                                        border: 1px solid #28a745;
+                                    }
+
+                                    .btn-success:hover {
+                                        background-color: #218838;
+                                    }
+
+                                    .btn-info {
+                                        background-color: #17a2b8;
+                                        border: 1px solid #17a2b8;
+                                    }
+
+                                    .btn-info:hover {
+                                        background-color: #138496;
+                                    }
+
+                                    .tooltip-inner {
+                                        background-color: #343a40;
+                                        color: #fff;
+                                        padding: 0.5rem;
+                                        border-radius: 5px;
+                                    }
+
+                                    #membersCollapse {
+                                            {
+                                            group.id
+                                        }
+                                    }
+
+                                        {
+                                        max-height: 300px;
+                                        overflow-y: auto;
+                                        overflow-x: auto;
+                                    }
+
+                                    @media (max-width: 576px) {
+                                        .btn-block {
+                                            width: 100%;
+                                        }
+                                    }
+
+                                    @media (max-width: 768px) {
+                                        .card-body {
+                                            padding: 1rem;
+                                        }
+
+                                        .card-header {
+                                            padding: 0.75rem;
+                                        }
+                                    }
+                                </style>
+
+                                <script>
+                                    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+                                    tooltipTriggerList.map(function (tooltipTriggerEl) {
+                                        return new bootstrap.Tooltip(tooltipTriggerEl);
+                                    });
+                                </script>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                {% if not groups %}
+                <p class="text-center text-muted">No groups created yet.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <hr>
+    <div class="row mt-4">
+        <div class="col-md">
+            <h3 class="mb-4 text-primary">Joined Groups</h3>
+            <div class="row">
+                {% for group in groupss %}
+                <div class="col-md-6 col-lg-4 mb-4 group-item" data-type="group" data-name="{{ group.name }}">
+                    <div class="card shadow-lg border-0 rounded-3">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="card-title mb-0">{{ group.name }}</h5>
+                            <small class="d-block">{{ group.description }}</small>
+                            <small class="d-block">
+                                {% if group.is_public %}
+                                <span class="badge bg-success">Public</span>
+                                {% else %}
+                                <span class="badge bg-secondary">Private</span>
+                                {% endif %}
+                            </small>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                {% if group.created_by == current_user.id %}
+                                <span class="badge bg-info text-white">You are the Admin</span>
+                                {% else %}
+                                {% set membership = group.members | selectattr("user_id", "equalto", current_user.id) |
+                                first %}
+                                {% if membership %}
+                                {% if membership.is_approved %}
+                                <form action="{{ url_for('leave_group', group_id=group.id) }}" method="POST">
+                                    <button type="submit" class="btn btn-outline-danger btn-sm">Leave Group</button>
+                                </form>
+                                {% else %}
+                                <span class="badge bg-warning">Request Sent - Awaiting Approval</span>
+                                {% endif %}
+                                {% else %}
+                                <form action="{{ url_for('join_group', group_id=group.id) }}" method="POST">
+                                    <button type="submit" class="btn btn-outline-primary btn-sm">Join Group</button>
+                                </form>
+                                {% endif %}
+                                {% endif %}
+                            </div>
+                            <a href="{{ url_for('group_chat', group_id=group.id) }}"
+                                class="btn btn-secondary btn-block mb-2">Open
+                                Chat</a>
+
+                            {% if group.created_by == current_user.id %}
+                            <form action="{{ url_for('delete_group', group_id=group.id) }}" method="POST"
+                                onsubmit="return confirm('Are you sure you want to delete this group and its messages?');">
+                                <button type="submit" class="btn btn-danger btn-sm btn-block">Delete Group</button>
+                            </form>
+                            <form action="{{ url_for('edit_group', group_id=group.id) }}" method="GET" class="mt-2">
+                                <button type="submit" class="btn btn-warning btn-sm btn-block">Edit Group</button>
+                            </form>
+                            {% endif %}
+
+                            <form action="{{ url_for('delete_chats', group_id=group.id) }}" method="POST"
+                                onsubmit="return confirm('Are you sure you want to delete all chat messages on this device?');"
+                                class="mt-2">
+                                <button type="submit" class="btn btn-warning btn-sm btn-block">Delete Chat</button>
+                            </form>
+                            <button class="btn btn-outline-secondary btn-sm btn-block mt-2"
+                                onclick="copyGroupLink('{{ url_for('group_chat', group_id=group.id, _external=True) }}')">Share</button>
+                            <script>
+                                function copyGroupLink(link) {
+                                    navigator.clipboard.writeText(link).then(() => {
+                                        alert('Group link copied to clipboard!');
+                                    }).catch(err => {
+                                        console.error('Failed to copy link: ', err);
+                                    });
+                                }
+                            </script>
+
+                        </div>
+                        <div class="card-footer bg-light">
+                            <button class="btn btn-info btn-sm btn-block" data-bs-toggle="collapse"
+                                data-bs-target="#membersCollapse{{ group.id }}" aria-expanded="false"
+                                aria-controls="membersCollapse{{ group.id }}">
+                                Toggle Members
+                            </button>
+                            <p class="mt-2 text-center">
+                                Total Members: {{ group.members | length + 1 }}
+                            </p>
+                            <div class="collapse mt-3" id="membersCollapse{{ group.id }}">
+                                <ul class="list-group list-group-flush">
+                                    {% set admin_user = group.created_by %}
+                                    {% set admin = users | selectattr('id', 'equalto', admin_user) | first %}
+                                    {% if admin %}
+                                    <li class="list-group-item bg-light border-bottom">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <strong>{{ admin.username }}</strong>
+                                            <span class="badge bg-info">Admin</span>
+                                        </div>
+                                    </li>
+                                    {% else %}
+                                    <li class="list-group-item">Admin not found.</li>
+                                    {% endif %}
+
+                                    {% for member in group.members %}
+                                    <li class="list-group-item d-flex justify-content-between align-items-center py-3">
+                                        <div class="d-flex align-items-center">
+                                            <span class="me-2">{{ member.user.username }}</span>
+
+                                            {% if member.is_admin %}
+                                            <span class="badge bg-info me-2">Admin</span>
+                                            {% elif member.is_approved %}
+                                            <span class="badge bg-success me-2">Approved</span>
+                                            {% else %}
+                                            <span class="badge bg-warning me-2">Pending</span>
+                                            {% if group.created_by == current_user.id %}
+                                            <form action="{{ url_for('approve_member', membership_id=member.id) }}"
+                                                method="POST" style="display:inline;">
+                                                <button type="submit"
+                                                    class="btn btn-success btn-sm me-2">Approve</button>
+                                            </form>
+                                            <form action="{{ url_for('reject_member', membership_id=member.id) }}"
+                                                method="POST" style="display:inline;">
+                                                <button type="submit" class="btn btn-danger btn-sm me-2">Reject</button>
+                                            </form>
+                                            {% endif %}
+                                            {% endif %}
+                                        </div>
+
+                                        <div class="d-flex">
+
+                                            {% if group.created_by == current_user.id and member.user.id !=
+                                            current_user.id %}
+                                            <form
+                                                action="{{ url_for('remove_member', group_id=group.id, user_id=member.user.id) }}"
+                                                method="POST" class="me-2">
+                                                <button type="submit" class="btn btn-danger btn-sm"
+                                                    data-bs-toggle="tooltip" data-bs-placement="top"
+                                                    title="Remove from Group">
+                                                    Kick
+                                                </button>
+                                            </form>
+                                            {% endif %}
+
+
+                                            {% if group.created_by == current_user.id %}
+                                            {% if not member.is_admin %}
+                                            <form
+                                                action="{{ url_for('promote_to_admin', group_id=group.id, user_id=member.user.id) }}"
+                                                method="POST" class="me-2">
+                                                <button type="submit" class="btn btn-success btn-sm"
+                                                    data-bs-toggle="tooltip" data-bs-placement="top"
+                                                    title="Promote to Admin">
+                                                    Promote
+                                                </button>
+                                            </form>
+                                            {% else %}
+                                            <form
+                                                action="{{ url_for('demote_from_admin', group_id=group.id, user_id=member.user.id) }}"
+                                                method="POST" class="me-2">
+                                                <button type="submit" class="btn btn-danger btn-sm"
+                                                    data-bs-toggle="tooltip" data-bs-placement="top"
+                                                    title="Remove Admin Privileges">
+                                                    Demote
+                                                </button>
+                                            </form>
+                                            {% endif %}
+                                            {% endif %}
+                                        </div>
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+
+                                <style>
+                                    .list-group-item {
+                                        border-radius: 10px;
+                                        background-color: #f8f9fa;
+                                        transition: all 0.3s ease;
+                                    }
+
+                                    .list-group-item:hover {
+                                        background-color: #e9ecef;
+                                        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+                                    }
+
+                                    .list-group-item .badge {
+                                        font-size: 0.85rem;
+                                        padding: 0.4em 0.6em;
+                                    }
+
+                                    .btn-sm {
+                                        font-size: 0.85rem;
+                                        padding: 0.25rem 0.75rem;
+                                    }
+
+                                    .btn-danger {
+                                        background-color: #dc3545;
+                                        border: 1px solid #dc3545;
+                                    }
+
+                                    .btn-danger:hover {
+                                        background-color: #c82333;
+                                    }
+
+                                    .btn-success {
+                                        background-color: #28a745;
+                                        border: 1px solid #28a745;
+                                    }
+
+                                    .btn-success:hover {
+                                        background-color: #218838;
+                                    }
+
+                                    .btn-info {
+                                        background-color: #17a2b8;
+                                        border: 1px solid #17a2b8;
+                                    }
+
+                                    .btn-info:hover {
+                                        background-color: #138496;
+                                    }
+
+                                    .tooltip-inner {
+                                        background-color: #343a40;
+                                        color: #fff;
+                                        padding: 0.5rem;
+                                        border-radius: 5px;
+                                    }
+
+                                    #membersCollapse {
+                                            {
+                                            group.id
+                                        }
+                                    }
+
+                                        {
+                                        max-height: 300px;
+                                        overflow-y: auto;
+                                        overflow-x: auto;
+                                    }
+
+                                    @media (max-width: 576px) {
+                                        .btn-block {
+                                            width: 100%;
+                                        }
+                                    }
+
+                                    @media (max-width: 768px) {
+                                        .card-body {
+                                            padding: 1rem;
+                                        }
+
+                                        .card-header {
+                                            padding: 0.75rem;
+                                        }
+                                    }
+                                </style>
+
+                                <script>
+                                    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+                                    tooltipTriggerList.map(function (tooltipTriggerEl) {
+                                        return new bootstrap.Tooltip(tooltipTriggerEl);
+                                    });
+                                </script>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                {% if not groupss %}
+                <p class="text-center text-muted">No groups joined yet.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <hr>
+    <script>
+        function copyProfileLink() {
+            const profileLink = "{{ url_for('user_profile', user_id=user.id, _external=True) }}";
+            navigator.clipboard.writeText(profileLink).then(() => {
+                alert('Profile link copied to clipboard!');
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+            });
+        }
+    </script>
+    <script>
+        document.getElementById('searchInput').addEventListener('input', function () {
+            const query = this.value.toLowerCase();
+            const items = document.querySelectorAll('.group-item');
+
+            items.forEach(item => {
+                const name = item.getAttribute('data-name').toLowerCase();
+                if (name.includes(query)) {
+                    item.style.display = '';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        });
+    </script>
+
+    {% endblock %}

@@ -1,0 +1,387 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <h2 class="text-center mb-4">Register</h2>
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <form method="POST" action="{{ url_for('register') }}" id="registerForm">
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Username</label>
+                            <input type="text" class="form-control" id="username" name="username"
+                                placeholder="e.g. Sam Altman" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email address</label>
+                            <input type="email" class="form-control" id="email" name="email" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Choose Login Method</label>
+                            <div>
+                                <input type="radio" id="otpMethod" name="loginMethod" value="otp" checked>
+                                <label for="otpMethod">OTP</label>
+                                <input type="radio" id="promoCodeMethod" name="loginMethod" value="promo_code">
+                                <label for="promoCodeMethod">Promo Code</label>
+                            </div>
+                        </div>
+
+                        <div class="mb-3 d-flex align-items-center">
+                            <button type="button" class="btn btn-primary me-2" id="sendOTPButton">
+                                <span id="sendOTPText">Send OTP</span>
+                                <span class="spinner-border spinner-border-sm ms-2" id="loadingIndicator"
+                                    style="display: none;"></span>
+                            </button>
+                        </div>
+
+                        <div class="mb-3" id="otpField">
+                            <label for="otp" class="form-label">Enter OTP</label>
+                            <input type="text" class="form-control" id="otp" name="otp" required>
+                            <button type="button" class="btn btn-primary mt-2" id="verifyOTPButton">
+                                <span id="verifyOTPText">Verify OTP</span>
+                                <span class="spinner-border spinner-border-sm ms-2" id="verifyLoading"
+                                    style="display: none;"></span>
+                            </button>
+                        </div>
+
+                        <div class="mb-3" id="promoCodeField" style="display: none;">
+                            <label for="promoCode" class="form-label">Promo Code</label>
+                            <input type="text" class="form-control" id="promoCode" name="promoCode"
+                                placeholder="Enter promo code">
+                        </div>
+
+                        <div class="mb-3" id="passwordField" style="display: none;">
+                            <label for="password" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="password" name="password" required>
+                        </div>
+
+                        <div class="mb-3" id="confirmPasswordField" style="display: none;">
+                            <label for="confirmPassword" class="form-label">Confirm Password</label>
+                            <input type="password" class="form-control" id="confirmPassword" name="confirmPassword"
+                                required>
+                        </div>
+
+                        <div class="mb-3" id="showPasswordCheckboxField" style="display: none;">
+                            <input type="checkbox" id="showPasswordCheckbox">
+                            <label for="showPasswordCheckbox" class="form-label">Show Password</label>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Select User Type</label>
+                            <div>
+                                <input type="radio" id="entrepreneur_innovator" name="user_type"
+                                    value="entrepreneur_innovator" checked>
+                                <label for="entrepreneur_innovator">Entrepreneur/Innovator (Discover real-world problems
+                                    and develop impactful solutions.)</label><br>
+
+                                <input type="radio" id="everyday_problem_solver" name="user_type"
+                                    value="everyday_problem_solver">
+                                <label for="everyday_problem_solver">Everyday Problem Solver (Share your daily
+                                    challenges and collaborate on solutions.)</label><br>
+
+                                <input type="radio" id="both" name="user_type" value="both">
+                                <label for="both">Both (Problem Solver & Innovator) (Share your challenges and work on
+                                    solving others problems.)</label><br>
+
+                                <input type="radio" id="other" name="user_type" value="other">
+                                <label for="other">Other (Supporter/Observer) (Explore the platform, support solutions,
+                                    and stay informed.)</label><br>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="sectors" class="form-label">Select Your Sectors of Interest (Select all that
+                                apply)</label>
+                            <select class="form-control" id="sectors" name="sectors" multiple required>
+                                <option value="Agriculture, Forestry & Fishing">Agriculture, Forestry & Fishing</option>
+                                <option value="Mining & Quarrying">Mining & Quarrying</option>
+                                <option value="Oil & Gas Exploration">Oil & Gas Exploration</option>
+                                <option value="Renewable Energy">Renewable Energy (Solar, Wind, Hydropower, etc.)
+                                </option>
+                                <option value="Water Resource Management">Water Resource Management</option>
+                                <option value="Food & Beverage Processing">Food & Beverage Processing</option>
+                                <option value="Textile & Apparel Manufacturing">Textile & Apparel Manufacturing</option>
+                                <option value="Automotive & Transportation Equipment">Automotive & Transportation
+                                    Equipment</option>
+                                <option value="Electronics & Semiconductors">Electronics & Semiconductors</option>
+                                <option value="Chemical Manufacturing">Chemical Manufacturing</option>
+                                <option value="Pharmaceutical Manufacturing">Pharmaceutical Manufacturing</option>
+                                <option value="Construction & Building Materials">Construction & Building Materials
+                                </option>
+                                <option value="Metalworking & Fabrication">Metalworking & Fabrication</option>
+                                <option value="Plastics & Rubber Products">Plastics & Rubber Products</option>
+                                <option value="Aerospace & Defense Manufacturing">Aerospace & Defense Manufacturing
+                                </option>
+                                <option value="Healthcare & Medical Services">Healthcare & Medical Services</option>
+                                <option value="Education & E-learning">Education & E-learning</option>
+                                <option value="Tourism, Hospitality & Leisure">Tourism, Hospitality & Leisure</option>
+                                <option value="Retail & Consumer Goods">Retail & Consumer Goods</option>
+                                <option value="Financial Services">Financial Services (Banking, Insurance, Investment)
+                                </option>
+                                <option value="Logistics & Supply Chain Management">Logistics & Supply Chain Management
+                                </option>
+                                <option value="Real Estate & Property Management">Real Estate & Property Management
+                                </option>
+                                <option value="Telecommunications & Networking">Telecommunications & Networking</option>
+                                <option value="Media & Entertainment">Media & Entertainment</option>
+                                <option value="Sports & Recreation">Sports & Recreation</option>
+                                <option value="Information Technology & Software Development">Information Technology
+                                    (IT) & Software Development</option>
+                                <option value="Artificial Intelligence & Machine Learning">Artificial Intelligence &
+                                    Machine Learning</option>
+                                <option value="Biotechnology & Life Sciences">Biotechnology & Life Sciences</option>
+                                <option value="Research & Development">Research & Development (R&D)</option>
+                                <option value="Data Science & Big Data Analytics">Data Science & Big Data Analytics
+                                </option>
+                                <option value="Cybersecurity & Data Protection">Cybersecurity & Data Protection</option>
+                                <option value="Cloud Computing & Infrastructure">Cloud Computing & Infrastructure
+                                </option>
+                                <option value="Government & Public Administration">Government & Public Administration
+                                </option>
+                                <option value="Nonprofit & Charity Organizations">Nonprofit & Charity Organizations
+                                </option>
+                                <option value="Policy Research & Think Tanks">Policy Research & Think Tanks</option>
+                                <option value="International Relations & Diplomacy">International Relations & Diplomacy
+                                </option>
+                                <option value="Space Exploration & Aerospace Engineering">Space Exploration & Aerospace
+                                    Engineering</option>
+                                <option value="Blockchain & Cryptocurrency">Blockchain & Cryptocurrency</option>
+                                <option value="E-commerce & Digital Marketplaces">E-commerce & Digital Marketplaces
+                                </option>
+                                <option value="Virtual Reality & Augmented Reality">Virtual Reality (VR) & Augmented
+                                    Reality (AR)</option>
+                                <option value="Robotics & Automation">Robotics & Automation</option>
+                                <option value="Electric Vehicles & Sustainable Transportation">Electric Vehicles (EVs) &
+                                    Sustainable Transportation</option>
+                                <option value="Circular Economy & Recycling">Circular Economy & Recycling</option>
+                                <option value="Climate Change Mitigation & Adaptation">Climate Change Mitigation &
+                                    Adaptation</option>
+                                <option value="Smart Cities & Internet of Things">Smart Cities & Internet of Things
+                                    (IoT)</option>
+                                <option value="Social Media & Influencer Marketing">Social Media & Influencer Marketing
+                                </option>
+                                <option value="Ethical Fashion & Sustainable Textiles">Ethical Fashion & Sustainable
+                                    Textiles</option>
+                                <option value="Organic & Natural Products">Organic & Natural Products</option>
+                                <option value="Arts, Crafts & Design">Arts, Crafts & Design</option>
+                                <option value="Film, Television & Animation">Film, Television & Animation</option>
+                                <option value="Music Production & Distribution">Music Production & Distribution</option>
+                                <option value="Writing, Publishing & Journalism">Writing, Publishing & Journalism
+                                </option>
+                                <option value="Gaming & Esports">Gaming & Esports</option>
+                                <option value="Legal Services & Advocacy">Legal Services & Advocacy</option>
+                                <option value="Human Resources & Talent Management">Human Resources & Talent Management
+                                </option>
+                                <option value="Event Planning & Management">Event Planning & Management</option>
+                                <option value="Safety & Security Services">Safety & Security Services</option>
+                                <option value="Environmental Consulting & Conservation">Environmental Consulting &
+                                    Conservation</option>
+                                <option value="Disaster Management & Emergency Services">Disaster Management & Emergency
+                                    Services</option>
+                                <option value="Agritech & Precision Farming">Agritech & Precision Farming</option>
+                            </select>
+                            <small class="form-text text-muted">Hold down the Ctrl (Windows) or Command (Mac) button to
+                                select multiple
+                                options.</small>
+                        </div>
+
+                        <script>
+
+                            document.getElementById('sectors').addEventListener('change', function () {
+                                var selectedSectors = Array.from(this.selectedOptions).map(option => option.value);
+                                document.getElementById('selected_sectors').textContent = "Selected Sectors: " + selectedSectors.join(', ');
+                            });
+                        </script>
+
+
+                        <p id="selected_sectors"></p>
+
+                        <div class="mb-3 d-flex align-items-center">
+                            <button type="submit" class="btn btn-primary me-2" id="registerButton"
+                                style="display: none;">
+                                <span>Submit</span>
+                                <span class="spinner-border spinner-border-sm ms-2" id="submitLoading"
+                                    style="display: none;"></span>
+                            </button>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <a href="{{ url_for('login') }}" class="text-decoration-none">Already have an account?
+                                Login</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div id="successMessage" class="alert alert-success mt-3" style="display: none;">
+                Registration successful! You can now log in.
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.querySelectorAll('input[name="user_type"]').forEach(function (input) {
+        input.addEventListener('change', function () {
+            const userType = document.querySelector('input[name="user_type"]:checked').value;
+            if (userType === 'everyday_problem_solver' || userType === 'other') {
+                document.getElementById('sectors').disabled = true;
+            } else {
+                document.getElementById('sectors').disabled = false;
+            }
+        });
+    });
+
+    document.getElementById('showPasswordCheckbox').addEventListener('change', function () {
+        const passwordField = document.getElementById('password');
+        const confirmPasswordField = document.getElementById('confirmPassword');
+
+        if (this.checked) {
+            passwordField.type = 'text';
+            confirmPasswordField.type = 'text';
+        } else {
+            passwordField.type = 'password';
+            confirmPasswordField.type = 'password';
+        }
+    });
+
+    document.getElementById('sendOTPButton').addEventListener('click', function () {
+        const email = document.getElementById('email').value;
+        if (!email) {
+            alert('Please enter your email first.');
+            return;
+        }
+
+        document.getElementById('loadingIndicator').style.display = 'inline-block';
+        document.getElementById('sendOTPText').style.display = 'none';
+        this.disabled = true;
+
+        sendOTP(email);
+    });
+
+    function sendOTP(email) {
+        fetch('/send_otp', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ email: email })
+        })
+            .then(response => {
+                document.getElementById('loadingIndicator').style.display = 'none';
+                document.getElementById('sendOTPText').style.display = 'inline';
+                document.getElementById('sendOTPButton').disabled = false;
+
+                if (response.ok) {
+                    alert("OTP sent to your email.");
+                    document.getElementById('otpField').style.display = 'block';
+                    document.getElementById('verifyOTPButton').style.display = 'inline-block';
+                } else {
+                    alert("Failed to send OTP. Please try again.");
+                }
+            })
+            .catch(error => {
+                console.error('Error sending OTP:', error);
+                document.getElementById('loadingIndicator').style.display = 'none';
+                document.getElementById('sendOTPText').style.display = 'inline';
+                document.getElementById('sendOTPButton').disabled = false;
+            });
+    }
+
+    document.getElementById('verifyOTPButton').addEventListener('click', function () {
+        const otp = document.getElementById('otp').value;
+        const email = document.getElementById('email').value;
+
+        document.getElementById('verifyLoading').style.display = 'inline-block';
+        document.getElementById('verifyOTPText').style.display = 'none';
+        this.disabled = true;
+
+        validateOTP(email, otp);
+    });
+
+    function validateOTP(email, otp) {
+        fetch('/validate_otp', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ email: email, otp: otp })
+        })
+            .then(response => {
+                document.getElementById('verifyLoading').style.display = 'none';
+                document.getElementById('verifyOTPText').style.display = 'inline';
+                document.getElementById('verifyOTPButton').disabled = false;
+
+                if (response.ok) {
+                    alert("OTP validated successfully! Now you can register.");
+                    document.getElementById('promoCodeField').style.display = 'none';
+                    document.getElementById('passwordField').style.display = 'block';
+                    document.getElementById('confirmPasswordField').style.display = 'block';
+                    document.getElementById('showPasswordCheckboxField').style.display = 'block';
+                    document.getElementById('registerButton').style.display = 'inline';
+                } else {
+                    alert("Invalid OTP. Please try again.");
+                }
+            })
+            .catch(error => {
+                console.error('Error validating OTP:', error);
+                document.getElementById('verifyLoading').style.display = 'none';
+                document.getElementById('verifyOTPText').style.display = 'inline';
+                document.getElementById('verifyOTPButton').disabled = false;
+            });
+    }
+
+    document.getElementById('registerForm').addEventListener('submit', function (event) {
+        const promoCodeField = document.getElementById('promoCodeField');
+        const promoCodeInput = document.getElementById('promoCode').value;
+
+        const promoCodeBinary = promoCodeInput.split('').map(char => {
+            return char.charCodeAt(0).toString(2).padStart(8, '0');
+        }).join(' ');
+
+        const validPromoCodeBinary = '01110110 01100111 01100101 01100011 01000000 01100101 01101100 01101001 01100010 01110010 01100001 01110010 01111001';
+
+        if (promoCodeField.style.display === 'block' && promoCodeBinary !== validPromoCodeBinary) {
+            alert('Invalid promo code. Please try again.');
+            event.preventDefault();
+        } else {
+            document.getElementById('registerButton').style.display = 'none';
+            document.getElementById('submitLoading').style.display = 'inline';
+        }
+    });
+
+    document.querySelectorAll('input[name="loginMethod"]').forEach(function (radio) {
+        radio.addEventListener('change', function () {
+            const otpMethod = document.getElementById('otpMethod').checked;
+            if (otpMethod) {
+                document.getElementById('otpField').style.display = 'block';
+                document.getElementById('promoCodeField').style.display = 'none';
+                document.getElementById('passwordField').style.display = 'none';
+                document.getElementById('confirmPasswordField').style.display = 'none';
+                document.getElementById('showPasswordCheckboxField').style.display = 'none';
+                document.getElementById('sendOTPButton').style.display = 'inline-block';
+                document.getElementById('registerButton').style.display = 'none';
+
+                document.getElementById('otp').setAttribute('required', true);
+                document.getElementById('promoCode').removeAttribute('required');
+                document.getElementById('password').removeAttribute('required');
+                document.getElementById('confirmPassword').removeAttribute('required');
+            } else {
+                document.getElementById('otpField').style.display = 'none';
+                document.getElementById('sendOTPButton').style.display = 'none';
+                document.getElementById('promoCodeField').style.display = 'block';
+                document.getElementById('passwordField').style.display = 'block';
+                document.getElementById('confirmPasswordField').style.display = 'block';
+                document.getElementById('showPasswordCheckboxField').style.display = 'block';
+                document.getElementById('registerButton').style.display = 'inline';
+
+                document.getElementById('otp').removeAttribute('required');
+                document.getElementById('promoCode').setAttribute('required', true);
+                document.getElementById('password').setAttribute('required', true);
+                document.getElementById('confirmPassword').setAttribute('required', true);
+            }
+        });
+    });
+</script>
+{% endblock %}

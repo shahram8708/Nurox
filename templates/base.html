@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='logo2.png') }}" type="image/x-icon">
+    <title>Nurox - Empowering Communities, Inspiring Innovations</title>
+    <meta name="description"
+        content="Nurox is a platform that bridges the gap between real-world problems and actionable solutions, empowering users and entrepreneurs to collaborate on innovative solutions to everyday challenges.">
+    <meta name="keywords"
+        content="Nurox, real-world problems, actionable solutions, innovation, community-driven platform, entrepreneurs, challenges, solutions, social impact, sustainable innovation">
+
+    <meta property="og:title" content="Nurox - Empowering Communities, Inspiring Innovations">
+    <meta property="og:description"
+        content="Nurox is the ultimate platform for addressing real-life challenges by empowering individuals and entrepreneurs to collaborate and find impactful solutions.">
+    <meta property="og:image" content="{{ url_for('static', filename='logo2.png') }}">
+    <meta property="og:url" content="https://nurox.onrender.com/">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Nurox">
+    <meta property="og:locale" content="en_US">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Nurox - Unlock a World of Innovation">
+    <meta name="twitter:description"
+        content="Nurox connects communities to innovate and solve real-world problems. Collaborate with like-minded individuals and entrepreneurs to create solutions that make a difference.">
+    <meta name="twitter:image" content="{{ url_for('static', filename='logo2.png') }}">
+
+    <script type="application/ld+json">
+        {
+            "@context": "http://schema.org",
+            "@type": "Organization",
+            "name": "Nurox",
+            "url": "https://nurox.onrender.com/",
+            "logo": "{{ url_for('static', filename='logo2.png') }}",
+            "description": "Nurox empowers communities to solve real-world problems through collaboration and innovation.",
+            "address": {
+                "@type": "PostalAddress",
+                "addressLocality": "Gujarat",
+                "addressCountry": "IN"
+            },
+            "sameAs": [
+                "https://x.com/multi_mosaic",
+                "https://www.facebook.com/profile.php?id=61574916413888"
+            ]
+        }
+    </script>
+
+    <link rel="canonical" href="https://nurox.onrender.com/">
+    <meta name="robots" content="index, follow">
+    <meta name="revisit-after" content="7 days">
+    <meta name="rating" content="General">
+    <meta name="theme-color" content="#ffffff">
+    <meta name="google-adsense-account" content="ca-pub-9877839152732215">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9877839152732215"
+        crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .container {
+            flex: 1;
+        }
+
+        .navbar {
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .hero {
+            position: relative;
+            background: url("{{ url_for('static', filename='solvelt-hero.jpg') }}") no-repeat center center;
+            background-size: cover;
+            color: white;
+            padding: 60px 0;
+            text-align: center;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        .hero::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            border-radius: 5px;
+            z-index: 1;
+        }
+
+        .hero h1,
+        .hero p {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero .btn {
+            position: relative;
+            z-index: 2;
+            margin-top: 20px;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: bold;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+        }
+
+        footer ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        footer ul li {
+            margin-bottom: 10px;
+        }
+
+        footer a {
+            color: #333;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        footer h5 {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+        }
+
+        footer .footer-links {
+            text-align: left;
+        }
+
+        .blink {
+            animation: blink-animation 1s steps(5, start) infinite;
+        }
+
+        @keyframes blink-animation {
+            50% {
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top shadow-sm">
+        <div class="container-fluid">
+            <a class="navbar-brand d-flex align-items-center" href="{{ url_for('home') }}">
+                <img src="{{ url_for('static', filename='logo2.png') }}" alt="Nurox" style="height: 45px;">
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link text-light" href="{{ url_for('home') }}">Home</a>
+                    </li>
+
+                    {% if current_user.is_authenticated %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle text-light" href="#" id="uploadDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            Uploads
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="uploadDropdown">
+                            <li><a class="dropdown-item" href="{{ url_for('submit_problem') }}">Upload Problem</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('create_story') }}">Upload Story</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-light" href="{{ url_for('problems') }}">Get Problem</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-light" href="{{ url_for('story_feed') }}">Get Story</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle text-light" href="#" id="groupsDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            Groups
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="groupsDropdown">
+                            <li><a class="dropdown-item" href="{{ url_for('create_group') }}">Create Group</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('group_list') }}">Join Groups</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-light" href="{{ url_for('subscribe') }}">Get Premium</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-light"
+                            href="{{ url_for('profile', user_id=current_user.id) }}">Profile</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-light" href="{{ url_for('users_list') }}">User List</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-light {% if current_user.is_authenticated and unread_count > 0 %} text-danger blink {% endif %}"
+                            href="{{ url_for('notifications') }}">
+                            Notifications
+                            {% if current_user.is_authenticated %}
+                            {% if unread_count > 0 %}
+                            <span class="badge bg-danger"
+                                style="border-radius: 50%; width: 1em; height: 1em; display: inline-block;">
+                            </span>
+                            {% endif %}
+                            {% endif %}
+                        </a>
+                    </li>
+                    {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link text-light" href="{{ url_for('login') }}">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-light" href="{{ url_for('register') }}">Register</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-light" href="{{ url_for('admin_dashboard') }}">Admin</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="navbar navbar-light bg-primary fixed-bottom d-lg-none shadow">
+        <div class="container-fluid">
+            <ul class="navbar-nav w-100 d-flex justify-content-around">
+                <li class="nav-item text-center w-25">
+                    <a class="nav-link text-light" href="{{ url_for('home') }}">
+                        <i class="bi bi-house-door"></i><br>Home
+                    </a>
+                </li>
+                <li class="nav-item text-center w-25">
+                    <a class="nav-link text-light" href="{{ url_for('problems') }}">
+                        <i class="bi bi-bug"></i><br>Problems
+                    </a>
+                </li>
+                <li class="nav-item text-center w-25">
+                    {% if current_user.is_authenticated %}
+                    <a class="nav-link text-light" href="{{ url_for('profile', user_id=current_user.id) }}">
+                        <i class="bi bi-person"></i><br>Profile
+                    </a>
+                    {% else %}
+                    <a class="nav-link text-light" href="{{ url_for('login') }}">
+                        <i class="bi bi-person"></i><br>Login
+                    </a>
+                    {% endif %}
+                </li>
+                <li class="nav-item text-center w-25">
+                    <a class="nav-link text-light {% if current_user.is_authenticated and unread_count > 0 %} text-danger blink {% endif %}"
+                        href="{{ url_for('notifications') }}">
+                        <i
+                            class="bi bi-bell {% if current_user.is_authenticated and unread_count > 0 %} text-danger blink {% endif %}"></i><br>Notifications
+                        {% if current_user.is_authenticated and unread_count > 0 %}
+                        <span class="badge bg-danger rounded-circle"
+                            style="position: absolute; top: -5px; right: -5px; width: 1em; height: 1em;"></span>
+                        {% endif %}
+                    </a>
+                </li>
+
+                <style>
+                    @keyframes blink {
+                        0% {
+                            opacity: 1;
+                        }
+
+                        50% {
+                            opacity: 0.5;
+                        }
+
+                        100% {
+                            opacity: 1;
+                        }
+                    }
+
+                    .blink {
+                        animation: blink 1s infinite;
+                    }
+
+                    .text-danger {
+                        color: #dc3545 !important;
+                    }
+
+                    .text-light {
+                        color: #f8f9fa !important;
+                    }
+                </style>
+
+            </ul>
+        </div>
+    </div>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+    <style>
+        @media (max-width: 992px) {
+
+            .navbar-toggler {
+                display: block;
+            }
+
+            .navbar.fixed-bottom {
+                display: block;
+            }
+
+            .navbar.fixed-bottom .navbar-nav {
+                display: flex;
+                justify-content: space-around;
+                flex-direction: row;
+            }
+
+            .nav-item {
+                text-align: center;
+            }
+
+            .nav-link {
+                font-size: 12px;
+            }
+
+            .nav-link i {
+                font-size: 20px;
+            }
+
+            .nav-item:hover .nav-link {
+                color: #007bff;
+                text-decoration: none;
+            }
+
+            .badge {
+                top: -5px;
+                right: -5px;
+                font-size: 0.8em;
+            }
+        }
+
+        .navbar .navbar-nav .nav-item .nav-link {
+            padding: 10px;
+        }
+    </style>
+
+    <style>
+        .navbar-nav .nav-item .nav-link {
+            transition: all 0.3s ease;
+        }
+
+        .navbar-nav .nav-item .nav-link:hover,
+        .navbar-nav .nav-item .nav-link:focus {
+            color: #ffcb05;
+            border-radius: 25px;
+        }
+
+        .blink {
+            animation: blink-animation 1.5s steps(5, start) infinite;
+        }
+
+        @keyframes blink-animation {
+            50% {
+                opacity: 0;
+            }
+        }
+
+        .navbar {
+            font-family: 'Arial', sans-serif;
+        }
+    </style>
+
+    <div class="container mt-5" style="padding-top: 70px;">
+
+        <div class="hero bg-light text-center py-5">
+            <div class="container">
+
+                <h1 class="display-4 text-white fw-bold mb-4">
+                    Welcome to Nurox
+                </h1>
+                <p class="lead text-white mb-4 px-3">A community-driven platform where real-world problems meet
+                    innovative solutions. Collaborate, create, and make a difference.</p>
+
+
+                <div class="btn-group-vertical">
+                    <a href="{{ url_for('submit_problem') }}" class="btn btn-lg btn-primary mb-3 shadow-sm rounded-3">
+                        <i class="bi bi-upload me-2"></i> Upload Problem
+                    </a>
+                    <a href="{{ url_for('problems') }}" class="btn btn-lg btn-success mb-3 shadow-sm rounded-3">
+                        <i class="bi bi-flag me-2"></i> Get Problems
+                    </a>
+                    <p class="text-white my-4">Be part of the solution! Upload your story to inspire others and access
+                        valuable resources.</p>
+                    <a href="{{ url_for('create_story') }}" class="btn btn-lg btn-info mb-3 shadow-sm rounded-3">
+                        <i class="bi bi-pencil-square me-2"></i> Upload Story
+                    </a>
+                    <a href="{{ url_for('story_feed') }}" class="btn btn-lg btn-danger mb-3 shadow-sm rounded-3">
+                        <i class="bi bi-book me-2"></i> Get Stories
+                    </a>
+                </div>
+            </div>
+        </div>
+
+
+        <style>
+            .btn-group-vertical .btn {
+                width: 100%;
+                transition: all 0.3s ease;
+            }
+
+            .btn-group-vertical .btn:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            }
+
+            .hero h1 a {
+                text-decoration: none;
+            }
+
+            .hero h1 a:hover {
+                color: #ffcb05;
+            }
+
+            .hero p {
+                font-size: 1.25rem;
+            }
+
+
+            @media (max-width: 768px) {
+                .hero h1 {
+                    font-size: 2.5rem;
+                }
+
+                .hero p {
+                    font-size: 1rem;
+                }
+            }
+        </style>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <div class="alert alert-info" role="alert">
+            {% for category, message in messages %}
+            <div class="alert alert-{{ category }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </div>
+
+    <div class="position-fixed bottom-0 end-0 m-3" style="z-index: 1050; bottom: 80px !important;">
+        <div class="dropdown">
+            <a class="btn btn-primary rounded-circle p-3 d-flex align-items-center justify-content-center position-relative shadow"
+                href="#" id="notificationDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false"
+                onclick="hideNotificationCount()">
+                <i class="fas fa-bell fa-lg"></i>
+                {% if unread_count > 0 %}
+                <span id="notificationCount"
+                    class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                    {{ unread_count }}
+                </span>
+                {% endif %}
+            </a>
+
+            <ul class="dropdown-menu dropdown-menu-end p-2" aria-labelledby="notificationDropdown" max-height: 400px;
+                overflow-y: auto;">
+                <li class="dropdown-header fw-bold text-primary"><a href="{{ url_for('notifications') }}"
+                        class="see-more-link text-primary" style="text-decoration: none; font-weight: bold;">
+                        See Complete Notifications
+                    </a></li>
+                <hr class="my-1">
+
+                {% if notifications %}
+                {% for notification in notifications %}
+                <li class="mb-2">
+                    {% if notification.notification_type == "login_alert" %}
+                    <a class="dropdown-item d-flex justify-content-between align-items-center"
+                        href="{{ url_for('change_password') }}">
+                        <div>
+                            <strong>Security Alert:</strong> New login detected.
+                        </div>
+                    </a>
+                    {% elif notification.notification_type == "follow" %}
+                    <a class="dropdown-item" href="{{ url_for('user_profile', user_id=notification.sender_id) }}">
+                        <strong>{{ notification.sender.username }}</strong> started following you.
+                    </a>
+                    {% elif notification.notification_type == "profile_view" %}
+                    <a class="dropdown-item" href="{{ url_for('user_profile', user_id=notification.sender_id) }}">
+                        <strong>{{ notification.sender.username }}</strong> viewed your profile.
+                    </a>
+                    {% elif notification.message_id is not none %}
+                    <a class="dropdown-item" href="{{ url_for('chat', user_id=notification.sender_id) }}">
+                        <strong>{{ notification.sender.username }}</strong> sent you a message: "{{
+                        notification.message.content }}"
+                    </a>
+                    {% elif notification.notification_type == "password_reset" %}
+                    <a class="dropdown-item" href="{{ url_for('login') }}">
+                        <strong>Password Reset:</strong> Your password has been successfully reset.
+                    </a>
+                    {% elif notification.notification_type == "comment" %}
+                    <a href="{{ url_for('problem_details', problem_id=notification.resource_id) }}"
+                        class="text-decoration-none dropdown-item">
+                        <em>{{ notification.msg}}</em>
+                    </a>
+                    {% elif notification.notification_type == "comment_reply" %}
+                    <a href="{{ url_for('problem_details', problem_id=notification.resource_id) }}"
+                        class="text-decoration-none dropdown-item">
+                        <em>{{ notification.msg }}</em>
+                    </a>
+                    {% elif notification.notification_type == "admin_promotion" %}
+                    <a class="dropdown-item" href="{{ url_for('group_list') }}">
+                        <strong>Admin Promotion:</strong> {{ notification.msg }}
+                    </a>
+                    {% elif notification.notification_type == "admin_demotion" %}
+                    <a class="dropdown-item" href="{{ url_for('group_list') }}">
+                        <strong>Admin Demotion:</strong> {{ notification.msg }}
+                    </a>
+                    {% elif notification.notification_type == "join_request" %}
+                    <a class="dropdown-item" href="{{ url_for('group_list') }}">
+                        <strong>Join Request:</strong> {{ notification.msg }}
+                    </a>
+                    {% elif notification.notification_type == "approval" %}
+                    <a class="dropdown-item" href="{{ url_for('group_list') }}">
+                        <strong>Approval:</strong> {{ notification.msg }}
+                    </a>
+                    {% elif notification.notification_type == "rejection" %}
+                    <a class="dropdown-item" href="{{ url_for('group_list') }}">
+                        <strong>Rejection:</strong> {{ notification.msg }}
+                    </a>
+                    {% elif notification.notification_type == "group_message" %}
+                    <a class="dropdown-item" href="{{ url_for('group_list') }}">
+                        <strong>Group Message:</strong> {{ notification.msg }}
+                    </a>
+                    {% endif %}
+                </li>
+                {% endfor %}
+                {% else %}
+                <li><a class="dropdown-item text-center">No notifications available.</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+
+    <style>
+        .btn-primary.rounded-circle {
+            width: 60px;
+            height: 60px;
+            font-size: 1.5rem;
+        }
+
+        .dropdown-menu {
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .badge {
+            font-size: 0.8rem;
+            padding: 0.5em;
+        }
+
+        .dropdown-item {
+            align-items: center;
+            border-radius: 0.5rem;
+            transition: background-color 0.2s;
+        }
+
+        .dropdown-item:hover {
+            background-color: #f8f9fa;
+        }
+    </style>
+    <script>
+        function hideNotificationCount() {
+            var notificationCount = document.getElementById('notificationCount');
+            if (notificationCount) {
+                notificationCount.style.display = 'none';
+                sessionStorage.setItem('notificationHidden', 'true');
+            }
+        }
+
+        document.getElementById('notificationIcon').addEventListener('click', function () {
+            hideNotificationCount();
+        });
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <!-- <div class="container mt-5">
+        <div class="alert alert-info custom-subscription-alert">
+            <div class="text-center">
+                <h4 class="alert-heading font-weight-bold">Empower Your Community with Nurox Subscription</h4>
+                <p class="lead">
+                    Unlock a world of opportunities, solutions, and collaborations with our premium subscription.
+                    Take the next step in problem-solving and innovation today!
+                </p>
+            </div>
+
+            <div class="row mt-4">
+                <div class="col-md-6">
+                    <h4 class="font-weight-bold text-primary">Exclusive Features for Users</h4>
+                    <ul class="custom-benefits-list">
+                        <li><strong>🔎 Personalized Problem Feed</strong> – Stay updated with problems that matter most
+                            to you.</li>
+                        <li><strong>💡 Collaborate with Entrepreneurs</strong> – Build solutions together with the
+                            brightest minds.</li>
+                        <li><strong>🛠️ AI-Driven Solutions</strong> – Receive AI recommendations for best-fit
+                            solutions.</li>
+                        <li><strong>🌍 Global Community Access</strong> – Connect with a worldwide network of
+                            problem-solvers.</li>
+                        <li><strong>🏆 Gamified Achievements</strong> – Earn rewards for contributions to real-world
+                            problem solving.</li>
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <h4 class="font-weight-bold text-primary">Special Benefits for Entrepreneurs</h4>
+                    <ul class="custom-benefits-list">
+                        <li><strong>🔑 Unlock High-Impact Problems</strong> – Access curated, validated challenges
+                            directly from users.</li>
+                        <li><strong>📊 Insights Dashboard</strong> – Analyze user engagement and trends to shape your
+                            solutions.</li>
+                        <li><strong>💸 Crowdfunding for Solutions</strong> – Raise funds from the community to support
+                            your innovative ideas.</li>
+                        <li><strong>🤝 Collaboration Opportunities</strong> – Team up with other entrepreneurs to
+                            co-create impactful solutions.</li>
+                        <li><strong>⚡ Priority Problem Access</strong> – Get first access to the most urgent and
+                            trending issues.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="text-center mt-4">
+                <p class="lead">
+                    Don’t miss the chance to be part of this transformative experience. Revolutionize the way you solve
+                    problems,
+                    connect, and innovate by subscribing today.
+                </p>
+                <a href="{{ url_for('subscribe') }}" class="btn btn-danger btn-lg custom-subscribe-btn">Subscribe
+                    Now</a>
+            </div>
+
+            <h4 class="text-center mt-5">Already a Subscriber? Enjoy unlimited access to all premium features and
+                benefits!</h4>
+        </div>
+    </div> -->
+
+    <style>
+        .custom-subscription-alert {
+            background-color: #f5f8fb;
+            border-color: #76c7f3;
+            color: #2b3d56;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .alert-heading {
+            font-size: 2.5rem;
+            color: #003366;
+        }
+
+        .font-weight-bold {
+            font-weight: bold;
+        }
+
+        .custom-benefits-list {
+            list-style-type: none;
+            padding: 0;
+            margin-top: 20px;
+        }
+
+        .custom-benefits-list li {
+            padding-left: 25px;
+            position: relative;
+            font-size: 1.1rem;
+            line-height: 1.7;
+        }
+
+        .custom-benefits-list li::before {
+            content: "✔";
+            color: #4e8d93;
+            position: absolute;
+            left: 0;
+            font-size: 1.6rem;
+            top: 0;
+        }
+
+        .custom-subscribe-btn {
+            background-color: #f44336;
+            border: none;
+            color: white;
+            padding: 15px 35px;
+            font-size: 1.2rem;
+            border-radius: 50px;
+            transition: background-color 0.3s ease;
+        }
+
+        .custom-subscribe-btn:hover {
+            background-color: #d32f2f;
+        }
+
+        h4 {
+            color: #33691e;
+            font-size: 1.5rem;
+        }
+
+        .lead {
+            font-size: 1.3rem;
+            line-height: 1.8;
+            color: #455a64;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+    </style>
+
+    <footer class="pt-4 text-center" style="padding-bottom: 100px;">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-10 mb-3">
+                    <h5>Nurox</h5>
+                    <p>Empowering Communities, Inspiring Innovations. Address real-world problems with innovative
+                        solutions.</p>
+                </div>
+                <hr>
+                <div class="col-lg-2 mb-3">
+                    <h5>Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="{{ url_for('home') }}">Home</a></li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('posts') }}">Update</a>
+                        </li>
+                        <li><a href="{{ url_for('our_team') }}">Team</a></li>
+                        {% if current_user.is_authenticated %}
+                        <li><a href="{{ url_for('subscribe') }}">Get Premium</a></li>
+                        <li>
+                            <a class="dropdown-item" href="{{ url_for('submit_problem') }}">Upload Problem</a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="{{ url_for('create_story') }}">Upload Story</a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </div>
+                <div class="col-lg-2 mb-3">
+                    <h5>Help & Support</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="{{ url_for('contact') }}">Support</a></li>
+                        <li><a href="{{ url_for('faq') }}">FAQ</a></li>
+                        <li><a href="{{ url_for('terms_conditions') }}">Policies</a></li>
+                        <li><a href="{{ url_for('privacy_policy') }}">Privacy</a></li>
+                        <li><a href="{{ url_for('about') }}">About Us</a></li>
+                        <li><a href="{{ url_for('admin_dashboard') }}">Admin</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 mb-3">
+                    <h5>User Section</h5>
+                    <ul class="list-unstyled">
+                        {% if current_user.is_authenticated %}
+                        <li><a href="{{ url_for('profile', user_id=current_user.id) }}">Profile</a></li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('users_list') }}">Users</a>
+                        </li>
+                        <li><a href="{{ url_for('edit_profile') }}">Edit Profile</a></li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if current_user.is_authenticated and unread_count > 0 %} text-danger blink {% endif %}"
+                                href="{{ url_for('notifications') }}">
+                                Notifications
+                                {% if current_user.is_authenticated %}
+                                {% if unread_count > 0 %}
+                                <span class="badge bg-danger"
+                                    style="border-radius: 50%; width: 1em; height: 1em; display: inline-block;">
+                                </span>
+                                {% endif %}
+                                {% endif %}
+                            </a>
+                        </li>
+                        <li><a href="{{ url_for('chatbot') }}">ChatBot</a></li>
+                        <li>
+                            <a class="dropdown-item" href="{{ url_for('problems') }}">Get Problem</a>
+                        </li>
+                        {% else %}
+                        <li><a href="{{ url_for('login') }}">Login</a></li>
+                        <li><a href="{{ url_for('register') }}">Register</a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+
+                {% if current_user.is_authenticated %}
+                <div class="col-lg-2 mb-3">
+                    <h5>Profile Section</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="{{ url_for('change_password') }}">Change Password</a></li>
+                        <li>
+                            <a class="nav-link" href="{{ url_for('forgot_password') }}">Forget Passowrd</a>
+                        </li>
+                        <li><a href="{{ url_for('verify_account') }}">Verify Account</a></li>
+                        <li><a href="{{ url_for('create_group') }}">Create Group</a></li>
+                        <li><a href="{{ url_for('group_list') }}">Join Groups</a></li>
+                        <li>
+                            <a class="dropdown-item" href="{{ url_for('story_feed') }}">Get Story</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        <hr class="my-4">
+
+        <div class="text-center">
+            <span>&copy; 2025 Nurox. All rights reserved.</span><br>
+            <span class="text-muted">Total Users: {{ total_users }}</span>
+            <br>
+            <span class="text-muted">Last updated: April 18, 2025</span>
+        </div>
+        </div>
+    </footer>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
