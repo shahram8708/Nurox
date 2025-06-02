@@ -17,7 +17,7 @@ import google.generativeai as genai
 
 app = Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://nurox_user:CBUkI1wd2HLjIxfdSgZfNC52ey1rK8Ve@dpg-d00t4jjuibrs73eqc15g-a.singapore-postgres.render.com/nurox'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://nurox_wfsr_user:5CiIWELXsE3VSsDkpZaS2oKmm25jvj8p@dpg-d0ui4ik9c44c73avgcmg-a.singapore-postgres.render.com/nurox_wfsr'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
