@@ -17,7 +17,7 @@ import google.generativeai as genai
 
 app = Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://NuroX_owner:npg_7djGblOK6RvL@ep-sparkling-rice-a9ltmuul-pooler.gwc.azure.neon.tech/NuroX?sslmode=require&channel_binding=require'
+app.config['SQLALCHEMY_DATABASE_URI'] = ''
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
@@ -34,11 +34,11 @@ login_manager.login_view = 'login'
 
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
-app.config['MAIL_USERNAME'] = 'factorysoch@gmail.com'  
-app.config['MAIL_PASSWORD'] = 'fohs cejx vezg aleb'
+app.config['MAIL_USERNAME'] = ''  
+app.config['MAIL_PASSWORD'] = ''
 app.config['MAIL_USE_TLS'] = True
 app.config['MAIL_USE_SSL'] = False
-app.config['MAIL_DEFAULT_SENDER'] = 'factorysoch@gmail.com'  
+app.config['MAIL_DEFAULT_SENDER'] = ''  
 from flask_migrate import Migrate
 migrate = Migrate(app, db)
 
@@ -1957,7 +1957,7 @@ def submit_problem():
         sector = request.form['sector']
         title = request.form['problem_title']
         description = request.form['problem_description']
-        genai.configure(api_key="AIzaSyCkvPRcKa1wetImSwv7nQ5emgg9AYIUE8A")
+        genai.configure(api_key="")
 
         model = genai.GenerativeModel('gemini-1.5-flash')
 
